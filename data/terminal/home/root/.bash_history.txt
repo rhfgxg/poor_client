@@ -1,0 +1,11 @@
+user_name-2024-05-26 17:30:10: max_window
+user_name-2024-05-26 17:30:24: exit!
+user_name-2024-05-26 17:50:13: 
+user_name-2024-05-26 17:50:22: 
+user_name-2024-05-26 17:58:30: echo aaa
+user_name-2024-05-26 18:00:17: echo aaa
+user_name-2024-05-26 18:00:23: exit!
+user_name-2024-05-26 18:00:49: echo qqqq
+user_name-2024-05-26 18:00:57: exit!
+user_name-2024-05-26 18:26:53: timestamp --timestamp_to_time 1716718997
+user_name-2024-05-26 18:29:34: timestamp --timestamp_to_time 1716718997
