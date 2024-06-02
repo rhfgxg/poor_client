@@ -1,0 +1,87 @@
+#include "client_network.h"
+#include <QDataStream>
+#include <QDebug>
+
+ClientNetwork::ClientNetwork(QObject *parent)
+    : QObject(parent),
+    tcpSocket(new QTcpSocket(this))
+{
+    // QTcpSocket::readyRead 服务器发送了数据，数据被成功接收并存储在QTcpSocket的内部缓冲区中，Qt就会发出这个信号
+    connect(tcpSocket, &QTcpSocket::readyRead, this, &ClientNetwork::readData);
+
+}
+
+ClientNetwork::~ClientNetwork()
+{
+    tcpSocket->close();
+}
+
+// 连接服务器
+// 参数：地址，端口
+void ClientNetwork::connectToServer(const QString &host, quint16 port)
+{
+    // 连接到服务器
+    tcpSocket->connectToHost(host, port);
+
+    // 连接成功后，通常会连接信号槽以响应连接成功或失败
+    connect(tcpSocket, &QTcpSocket::connected, this, &ClientNetwork::onConnected);
+    // 选择QAbstractSocket::errorOccurred信号的一个特定重载版本，该版本接受一个QAbstractSocket::SocketError作为参数。
+    // QAbstractSocket::errorOccurred信号在QAbstractSocket发生错误时发射，
+    // 它有多个重载形式，但使用QOverload可以帮助你精确地绑定到带有SocketError参数的版本
+    connect(tcpSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::errorOccurred), this, &ClientNetwork::onError);
+
+}
+
+// 链接服务器成功
+void ClientNetwork::onConnected()
+{
+    qDebug() << "成功连接到服务器";
+}
+
+// 链接服务器失败
+void ClientNetwork::onError()
+{
+    qDebug() << "连接错误：" << tcpSocket->errorString();
+}
+
+// 发送信息
+void ClientNetwork::sendMessage(const QByteArray &message)
+{
+    if (tcpSocket->state() != QAbstractSocket::ConnectedState)
+    {
+        qDebug() << "套接字未连接";
+        return;
+    }
+
+//    tcpSocket->open(QIODevice::ReadWrite);  // 打开套接字
+//    tcpSocket->write(message);
+
+    // 写入数据到套接字
+    qint64 bytesWritten = tcpSocket->write(message);
+
+    // 检查是否有数据实际被写入
+    if(bytesWritten > 0)
+    {
+        qDebug() << "成功写入" << bytesWritten << "字节数据";
+    }
+    else
+    {
+
+        qDebug() << "写入数据失败：" << tcpSocket->errorString();
+
+    }
+}
+
+// 读取服务器响应数据
+void ClientNetwork::readData()
+{
+    QByteArray data = tcpSocket->readAll(); // 读取缓冲区数据，保存到data
+    QDataStream in(&data, QIODevice::ReadOnly); // 读取data，写入到in
+    QString response;
+    // 从数据流中读取数据并存储到变量response中，
+    // 如果response是一个基本数据类型（如int、double、QString等），这行代码会尝试从数据流中读取相应类型的数据并赋值给response
+    // 如果是自定义类型，需要重载 operator>>以便与QDataStream兼容
+    in >> response;
+    emit loginResponse(response);   // 发射信号，并携带 response
+}
+
