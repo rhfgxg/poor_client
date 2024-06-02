@@ -135,7 +135,7 @@ void Command::command_log(const QString& command_str)   // 指令加入记录
         // 写入新的字符串
         out << log_new;
 
-        // 清理工作
+        // 关闭文件
         file.close();
     }
     else

@@ -1,8 +1,8 @@
 #include "user_login_account.h"
 #include "ui_user_login_account.h"
 
-#include "user_login_phone.h"
-#include "../mainwindow.h"
+#include "user_login_phone.h"   // 手机号登录界面
+#include "../mainwindow.h"  // 主界面
 
 #include <QFont>    // 字体
 // 使用正则
@@ -13,14 +13,22 @@
 #include <QTimer>
 
 // 账号密码登录
-UserLoginAccount::UserLoginAccount(QWidget *parent) :
+UserLoginAccount::UserLoginAccount(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::UserLoginAccount),
-    user_login_account_manager(new UserLoginAccountManager(this))
+    user_login_account_manager(new UserLoginAccountManager(network_, this))
 {
     ui->setupUi(this);
     layout();   // 界面格式初始化
-    connects(); // 信号槽关联初始化
+// 关联信号槽
+    // 账号和密码输入框输入内容后，显示登录按钮
+    connect(ui->lineEdit_account, &QLineEdit::textChanged, this, &UserLoginAccount::on_show_pushButton_login);
+    connect(ui->lineEdit_password, &QLineEdit::textChanged, this, &UserLoginAccount::on_show_pushButton_login);
+
+    // 登录成功信号
+    connect(user_login_account_manager, &UserLoginAccountManager::loginSuccess, this, &UserLoginAccount::on_login_response_success);
+    // 登录失败信号
+    connect(user_login_account_manager, &UserLoginAccountManager::loginFailed, this, &UserLoginAccount::on_login_response_failed);
 }
 
 
@@ -49,19 +57,6 @@ void UserLoginAccount::layout()   // 界面格式初始化
     // 限制登录按钮：在账号和密码输入后才能点击
     ui->pushButton_login->setEnabled(false); // 初始时禁用登录按钮
 }
-
-void UserLoginAccount::connects()    // 信号槽关联初始化
-{
-    // 两个输入框输入内容后，显示登录按钮
-    connect(ui->lineEdit_account, &QLineEdit::textChanged, this, &UserLoginAccount::on_show_pushButton_login);
-    connect(ui->lineEdit_password, &QLineEdit::textChanged, this, &UserLoginAccount::on_show_pushButton_login);
-
-    // 登录成功信号
-    connect(user_login_account_manager, &UserLoginAccountManager::loginSuccess, this, &UserLoginAccount::on_login_response_success);
-    // 登录失败信号
-    connect(user_login_account_manager, &UserLoginAccountManager::loginFailed, this, &UserLoginAccount::on_login_response_failed);
-}
-
 
 // 自定义槽函数
 void UserLoginAccount::on_show_pushButton_login() // 显示登录按钮
@@ -102,7 +97,8 @@ void UserLoginAccount::on_pushButton_back_clicked()   // 按钮：返回上一�
 {
     this->close();
     // 打开验证码登录界面
-    UserLoginPhone* w = new UserLoginPhone;
+
+    UserLoginPhone* w = new UserLoginPhone(network);
     w->show();
 }
 
@@ -146,6 +142,8 @@ void UserLoginAccount::on_pushButton_login_clicked()  // 登录按钮
         // 根据用户选择执行相应操作
         if (msgBox->clickedButton() == yesButton)
         {
+
+            ui->checkBox_protocol->setChecked(true);
             msgBox->close(); // 关闭弹窗
         }
         else if (msgBox->clickedButton() == noButton)
@@ -163,7 +161,9 @@ void UserLoginAccount::on_pushButton_login_clicked()  // 登录按钮
 void UserLoginAccount::on_pushButton_login_phone_clicked()    // 跳转短信验证码登录界面
 {
     this->close();
-    UserLoginPhone* w = new UserLoginPhone;
+
+    // 打开验证码登录界面
+    UserLoginPhone* w = new UserLoginPhone(network);
     w->show();
 }
 

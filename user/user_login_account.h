@@ -1,8 +1,6 @@
 #ifndef USER_LOGIN_H
 #define USER_LOGIN_H
 
-#include "../client/client_network.h"
-
 #include "../client/user/user_login_account_manager.h"
 #include <QWidget>
 
@@ -16,7 +14,7 @@ class UserLoginAccount : public QWidget
     Q_OBJECT
 
 public:
-    explicit UserLoginAccount(QWidget *parent = nullptr);
+    explicit UserLoginAccount(ClientNetwork *network_, QWidget *parent = nullptr);
     ~UserLoginAccount();
 
 private slots:
@@ -43,12 +41,12 @@ private slots:
 
 private:
     void layout();  // 界面格式初始化
-    void connects();    // 信号槽关联初始化
 
 private:
     Ui::UserLoginAccount *ui;
     UserLoginAccountManager *user_login_account_manager; // 创建一个登录管理对象，方便接收来自他的信号
 
+    ClientNetwork *network;
 };
 
 #endif // USER_LOGIN_H

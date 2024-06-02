@@ -1,16 +1,28 @@
 #include "user_login_phone.h"
 #include "ui_user_login_phone.h"
 
+<<<<<<< HEAD
 #include "./user_login_account.h"
 #include "./user_login_phone_code.h"
+=======
+#include "./user_login_account.h"   // 账号登陆界面
+#include "./user_login_phone_code.h"    // 验证码登录界面
+>>>>>>> 4c3945820312cfca5d5e0c073c6624901eccbd10
 #include <QFont>    // 字体
 #include <QMessageBox>  // 弹窗
 #include <QTimer>
 
 // 手机号登录
+<<<<<<< HEAD
 UserLoginPhone::UserLoginPhone(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::UserLoginPhone)
+=======
+UserLoginPhone::UserLoginPhone(ClientNetwork *network_, QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::UserLoginPhone),
+    network(network_)
+>>>>>>> 4c3945820312cfca5d5e0c073c6624901eccbd10
 {
     ui->setupUi(this);
     layout();   // 界面格式初始化
@@ -72,6 +84,7 @@ void UserLoginPhone::on_pushButton_help_clicked() // 按钮：帮助界面
 
 void UserLoginPhone::on_pushButton_send_code_clicked()    // 按钮：发送验证码
 {
+<<<<<<< HEAD
     if (ui->checkBox_protocol->isChecked())
     {
         // 如果勾选协议：正常跳转
@@ -82,6 +95,9 @@ void UserLoginPhone::on_pushButton_send_code_clicked()    // 按钮：发送验�
         w->show();
     }
     else
+=======
+    if (!ui->checkBox_protocol->isChecked())
+>>>>>>> 4c3945820312cfca5d5e0c073c6624901eccbd10
     {
         // 未勾选协议：弹窗：提示需要同意协议
         QMessageBox* msgBox = new QMessageBox(this);
@@ -99,6 +115,7 @@ void UserLoginPhone::on_pushButton_send_code_clicked()    // 按钮：发送验�
         // 根据用户选择执行相应操作
         if (msgBox->clickedButton() == yesButton)
         {
+<<<<<<< HEAD
             msgBox->close(); // 关闭弹窗
 
             this->close();
@@ -106,20 +123,39 @@ void UserLoginPhone::on_pushButton_send_code_clicked()    // 按钮：发送验�
             QString phone = ui->lineEdit_phone->text(); // 获取输入的手机号
             UserLoginPhoneCode* w = new UserLoginPhoneCode(phone);    // 打开验证码输入界面并传入手机号
             w->show();
+=======
+            ui->checkBox_protocol->setChecked(true);    // 勾选协议
+            msgBox->close(); // 关闭弹窗
+>>>>>>> 4c3945820312cfca5d5e0c073c6624901eccbd10
         }
         else if (msgBox->clickedButton() == noButton)
         {
             msgBox->close(); // 关闭弹窗
+<<<<<<< HEAD
         }
     }
 
+=======
+            return;
+        }      
+    }
+    this->close();
+    // 打开输入验证码界面
+    QString phone = ui->lineEdit_phone->text(); // 获取输入的手机号
+    UserLoginPhoneCode* w = new UserLoginPhoneCode(network, phone);    // 打开验证码输入界面并传入手机号
+    w->show();
+>>>>>>> 4c3945820312cfca5d5e0c073c6624901eccbd10
 }
 
 void UserLoginPhone::on_pushButton_login_account_clicked()   // 按钮：使用密码登录
 {
     this->close();
     // 打开密码登录界面
+<<<<<<< HEAD
     UserLoginAccount* w = new UserLoginAccount();
+=======
+    UserLoginAccount* w = new UserLoginAccount(network);
+>>>>>>> 4c3945820312cfca5d5e0c073c6624901eccbd10
     w->show();
 }
 

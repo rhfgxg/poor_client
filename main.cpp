@@ -19,13 +19,14 @@ int main(int argc, char *argv[])
     if (!hasLocalLoginRecord())
     {// 如果本地没有登录记录，进行登录活动
         ClientNetwork *network = new ClientNetwork();
-        network->connectToServer("127.0.0.1", 49674);
-        
-        UserLoginPhone *w = new UserLoginPhone();
+        network->connectToServer("127.0.0.1", 1234);
+
+        UserLoginPhone *w = new UserLoginPhone(network);
         w->show();
     }
     else
     {
+        // 进入软件
         MainWindow *w = new MainWindow;
         w->show();
     }

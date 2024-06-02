@@ -1,6 +1,7 @@
 #ifndef USER_LOGIN_PHONE_CODE_H
 #define USER_LOGIN_PHONE_CODE_H
 
+#include "../client/client_network.h"
 #include <QWidget>
 
 // 输入验证码界面
@@ -15,7 +16,7 @@ class UserLoginPhoneCode : public QWidget
     Q_OBJECT
 
 public:
-    explicit UserLoginPhoneCode(QString phone, QWidget *parent = nullptr);
+    explicit UserLoginPhoneCode(ClientNetwork *network_, QString phone, QWidget *parent = nullptr);
     ~UserLoginPhoneCode();
 
 private slots:
@@ -32,6 +33,7 @@ private:
     void label_send_code_again_time();  // 再次发送验证码的倒计时
 private:
     Ui::UserLoginPhoneCode *ui;
+    ClientNetwork *network;
 };
 
 #endif // USER_LOGIN_PHONE_CODE_H

@@ -14,7 +14,7 @@ class UserLoginPhone : public QWidget
     Q_OBJECT
 
 public:
-    explicit UserLoginPhone(QWidget *parent = nullptr);
+    explicit UserLoginPhone(ClientNetwork *network_, QWidget *parent = nullptr);
     ~UserLoginPhone();
 
 private slots:

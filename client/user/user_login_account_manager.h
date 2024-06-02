@@ -10,7 +10,7 @@ class UserLoginAccountManager : public QObject
     Q_OBJECT
 
 public:
-    explicit UserLoginAccountManager(QObject *parent = nullptr);
+    explicit UserLoginAccountManager(ClientNetwork *network_, QObject *parent = nullptr);
     ~UserLoginAccountManager();
 
     void login(const QString &username, const QString &password);
@@ -21,9 +21,6 @@ signals:
 
 private slots:
     void handleLoginResponse(const QString &message);
-
-private:
-    void connucts();    // 信号槽绑定
 
 private:
     ClientNetwork *network;    // 创建服务器通信对象，来接受他的信号

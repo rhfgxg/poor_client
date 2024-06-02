@@ -8,9 +8,10 @@
 #include <QLabel>
 
 // 手机号登录_验证码界面
-UserLoginPhoneCode::UserLoginPhoneCode(QString phone, QWidget *parent) :
+UserLoginPhoneCode::UserLoginPhoneCode(ClientNetwork *network_, QString phone, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::UserLoginPhoneCode)
+    ui(new Ui::UserLoginPhoneCode),
+    network(network_)
 {
     ui->setupUi(this);
     layout();   // 界面格式初始化
@@ -84,7 +85,7 @@ void UserLoginPhoneCode::label_send_code_again_time()       // 再次发送验�
 void UserLoginPhoneCode::on_pushButton_back_clicked()    // 返回上一级
 {
     this->close();
-    UserLoginPhone* w = new UserLoginPhone;
+    UserLoginPhone* w = new UserLoginPhone(network);
     w->show();
 }
 

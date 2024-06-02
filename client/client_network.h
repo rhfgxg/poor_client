@@ -20,8 +20,9 @@ signals:
     void loginResponse(const QString &message);
 
 private slots:
-    void readData();
-    void handleError(QAbstractSocket::SocketError socketError);
+    void onConnected(); // 如果链接成功
+    void onError(); // 如果连接失败
+    void readData();    // 接受服务器发来的数据
 
 private:
     QTcpSocket *tcpSocket;
