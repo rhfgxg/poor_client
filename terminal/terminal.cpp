@@ -5,9 +5,10 @@
 #include <QGridLayout>
 
 // 终端界面类
-Terminal::Terminal(QWidget *parent) :
+Terminal::Terminal(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Terminal)
+    ui(new Ui::Terminal),
+    network(network_)
 {
     ui->setupUi(this);
 
@@ -18,6 +19,7 @@ Terminal::Terminal(QWidget *parent) :
 Terminal::~Terminal()
 {
     delete ui;
+    delete network;
 }
 
 
@@ -30,7 +32,7 @@ void Terminal::on_command_execute_result(const QString& command_first, const QSt
     if (command_first == "exit!")   // 退出终端
     {
         this->close();
-        MainWindow* w = new MainWindow;
+        MainWindow* w = new MainWindow(network);
         w->show();
     }
     else if (command_first == "max_window")   // 窗口最大化

@@ -19,6 +19,7 @@ UserLoginPhone::UserLoginPhone(ClientNetwork *network_, QWidget *parent) :
 UserLoginPhone::~UserLoginPhone()
 {
     delete ui;
+    delete network;
 }
 
 

@@ -35,14 +35,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             tools/convertor/convertor.h tools/convertor/convertor.cpp tools/convertor/convertor.ui
                 tools/convertor/timestamp/timestamp_ui.h tools/convertor/timestamp/timestamp_ui.cpp tools/convertor/timestamp/timestamp_ui.ui
                 tools/convertor/timestamp/timestamp.h tools/convertor/timestamp/timestamp.cpp
+            tools/encipher/md5.h tools/encipher/md5.cpp
+            tools/encipher/base64.h tools/encipher/base64.cpp
+
         terminal/terminal.h terminal/terminal.cpp terminal/terminal.ui
         terminal/command.h terminal/command.cpp
             terminal/module/terminaltextedit.h terminal/module/terminaltextedit.cpp
 
         client/client_network.h client/client_network.cpp
             client/user/user_login_account_manager.h client/user/user_login_account_manager.cpp
-            tools/encipher/md5.h tools/encipher/md5.cpp
-
+            client/uploads/useruploadsmanager.h client/uploads/useruploadsmanager.cpp
 
     )
 # Define target properties for Android with Qt 6 as:

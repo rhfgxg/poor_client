@@ -77,7 +77,7 @@ void UserLoginAccount::on_login_response_success() // 登录成功
 {
     // 登录成功，打开主界面
     this->close();
-    MainWindow *w = new MainWindow();
+    MainWindow *w = new MainWindow(network);
     w->show();
 }
 

@@ -2,9 +2,10 @@
 #include "ui_tools.h"
 #include "../mainwindow.h"
 #include "./convertor/convertor.h"
-Tools::Tools(QWidget *parent) :
+Tools::Tools(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Tools)
+    ui(new Ui::Tools),
+    network(network_)
 {
     ui->setupUi(this);
 }
@@ -17,7 +18,7 @@ Tools::~Tools()
 void Tools::on_pushButton_to_mainWindow_clicked()   // 返回主页面
 {
     this->close();
-    MainWindow* w = new MainWindow;
+    MainWindow* w = new MainWindow(network);
     w->show();
 }
 
@@ -25,7 +26,7 @@ void Tools::on_pushButton_to_mainWindow_clicked()   // 返回主页面
 void Tools::on_pushButton_to_convertor_clicked()    // 前往转换器总览页面
 {
     this->close();
-    Convertor* w = new Convertor;
+    Convertor* w = new Convertor(network);
     w->show();
 }
 

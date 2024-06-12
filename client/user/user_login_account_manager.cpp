@@ -2,9 +2,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-
-UserLoginAccountManager::UserLoginAccountManager(ClientNetwork *network_, QObject *parent)
-    : QObject(parent),
+UserLoginAccountManager::UserLoginAccountManager(ClientNetwork *network_, QObject *parent) :
+    QObject(parent),
     network(network_)
 {
     // loginResponse：服务器通讯类的信号，在接收到服务器消息时发出，携带了收到的消息
@@ -19,12 +18,11 @@ UserLoginAccountManager::~UserLoginAccountManager()
 // 账号登录按钮调用此函数，传入账号和密码
 void UserLoginAccountManager::login(const QString &username, const QString &password)
 {
-
+    // 使用json对象，打包和发送数据
     QJsonObject request;
     request["type"] = "LOGIN";
-
-    request["username"] = username;
-    request["password"] = password;
+    request["username"] = username; // 用户名
+    request["password"] = password; // 用户密码
 
     QJsonDocument messageDoc(request);
     QByteArray message = messageDoc.toJson();
@@ -33,14 +31,18 @@ void UserLoginAccountManager::login(const QString &username, const QString &pass
 }
 
 // 根据服务器发回的消息 message，处理登录结果
-void UserLoginAccountManager::handleLoginResponse(const QString &message)
+void UserLoginAccountManager::handleLoginResponse(const QJsonObject &request)
 {
-    if (message == "SUCCESS")
+    qDebug("客户端收到消息");
+    QString status = request["status"].toString();
+
+    if (status == "SUCCESS")
     {
         emit loginSuccess();    // 发送登录成功信号，被账号登录类接收
     }
     else
     {
+        QString message = request["message"].toString();
         emit loginFailed(message);  // 如果登录失败，发回的消息会携带失败内容
     }
 }

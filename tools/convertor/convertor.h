@@ -1,6 +1,7 @@
 #ifndef CONVERTOR_H
 #define CONVERTOR_H
 
+#include "../../client/client_network.h"
 #include <QWidget>
 
 namespace Ui {
@@ -12,7 +13,7 @@ class Convertor : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Convertor(QWidget *parent = nullptr);
+    explicit Convertor(ClientNetwork *network_, QWidget *parent = nullptr);
     ~Convertor();
 
 
@@ -24,6 +25,7 @@ private slots:
 
 private:
     Ui::Convertor *ui;
+    ClientNetwork *network; // 服务器通讯套接字
 };
 
 #endif // CONVERTOR_H

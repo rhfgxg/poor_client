@@ -22,6 +22,7 @@ UserLoginPhoneCode::UserLoginPhoneCode(ClientNetwork *network_, QString phone, Q
 UserLoginPhoneCode::~UserLoginPhoneCode()
 {
     delete ui;
+    delete network;
 }
 
 

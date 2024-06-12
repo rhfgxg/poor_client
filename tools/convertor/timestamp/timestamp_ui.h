@@ -2,6 +2,7 @@
 #define TIMESTAMP_UI_H
 
 #include "./timestamp.h"
+#include "../../../client/client_network.h"    // 传递套接字
 #include <QWidget>
 
 namespace Ui {
@@ -14,7 +15,7 @@ class TimestampUi : public QWidget
     Q_OBJECT
 
 public:
-    explicit TimestampUi(QWidget *parent = nullptr);
+    explicit TimestampUi(ClientNetwork *network_, QWidget *parent = nullptr);
     ~TimestampUi();
 
 private:
@@ -32,6 +33,7 @@ private slots:
 private:
     Ui::TimestampUi *ui;
     Timestamp timestamp;
+    ClientNetwork *network; // 服务器通讯套接字
 };
 
 #endif // TIMESTAMP_UI_H

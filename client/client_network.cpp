@@ -1,5 +1,7 @@
 #include "client_network.h"
 #include <QDataStream>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QDebug>
 
 ClientNetwork::ClientNetwork(QObject *parent)
@@ -54,10 +56,7 @@ void ClientNetwork::sendMessage(const QByteArray &message)
         return;
     }
 
-//    tcpSocket->open(QIODevice::ReadWrite);  // 打开套接字
-//    tcpSocket->write(message);
-
-    // 写入数据到套接字
+    // 写入数据到套接字, 然后发送
     qint64 bytesWritten = tcpSocket->write(message);
 
     // 检查是否有数据实际被写入
@@ -67,7 +66,6 @@ void ClientNetwork::sendMessage(const QByteArray &message)
     }
     else
     {
-
         qDebug() << "写入数据失败：" << tcpSocket->errorString();
 
     }
@@ -76,13 +74,20 @@ void ClientNetwork::sendMessage(const QByteArray &message)
 // 读取服务器响应数据
 void ClientNetwork::readData()
 {
-    QByteArray data = tcpSocket->readAll(); // 读取缓冲区数据，保存到data
-    QDataStream in(&data, QIODevice::ReadOnly); // 读取data，写入到in
-    QString response;
-    // 从数据流中读取数据并存储到变量response中，
-    // 如果response是一个基本数据类型（如int、double、QString等），这行代码会尝试从数据流中读取相应类型的数据并赋值给response
-    // 如果是自定义类型，需要重载 operator>>以便与QDataStream兼容
-    in >> response;
-    emit loginResponse(response);   // 发射信号，并携带 response
+    // 获取发回的数据
+    // 然后检查结果类型，然后发送对应信号
+
+    QByteArray data = tcpSocket->readAll();
+    QJsonDocument requestDoc = QJsonDocument::fromJson(data);
+    QJsonObject request = requestDoc.object();
+
+    QString type = request["type"].toString();  // 获取返回类型
+
+    if (type == "LOGIN")
+    {
+        emit loginResponse(request);   // 发射信号，并携带 response
+    }
+
+
 }
 

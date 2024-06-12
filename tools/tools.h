@@ -1,6 +1,7 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include "../client/client_network.h"    // 传递套接字
 #include <QWidget>
 
 namespace Ui {
@@ -13,7 +14,7 @@ class Tools : public QWidget
     Q_OBJECT
 
 public:
-    explicit Tools(QWidget *parent = nullptr);
+    explicit Tools(ClientNetwork *network_, QWidget *parent = nullptr);
     ~Tools();
 
 private slots:
@@ -23,6 +24,8 @@ private slots:
 
 private:
     Ui::Tools *ui;
+    ClientNetwork *network; // 服务器通讯套接字
+
 };
 
 #endif // TOOLS_H

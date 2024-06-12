@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "./module/terminaltextedit.h"  // 重写的QPlainTextEdit
+#include "../client/client_network.h"
 
 namespace Ui {
 class Terminal;
@@ -13,7 +14,7 @@ class Terminal : public QWidget
     Q_OBJECT
 
 public:
-    explicit Terminal(QWidget *parent = nullptr);
+    explicit Terminal(ClientNetwork *network_, QWidget *parent = nullptr);
     ~Terminal();
     void on_command_execute_result(const QString& command_first, const QStringList& tokens);    // 指令执行
     void on_command_complete_list(const QStringList& completionSuggestion);  // 指令补全
@@ -23,8 +24,9 @@ private:
 
 private:
     Ui::Terminal *ui;
-    // 使用自定义的TerminalTextEdit
-    TerminalTextEdit *plainTextEdit_terminal;
+    TerminalTextEdit *plainTextEdit_terminal;   // 使用自定义的TerminalTextEdit：重写的QPlainTextEdit
+    ClientNetwork *network; // 服务器通讯套接字
+
 };
 
 #endif // TERMINAL_H

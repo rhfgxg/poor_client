@@ -1,7 +1,7 @@
 #ifndef USER_LOGIN_PHONE_CODE_H
 #define USER_LOGIN_PHONE_CODE_H
 
-#include "../client/client_network.h"
+#include "../client/client_network.h"   // 传递套接字
 #include <QWidget>
 
 // 输入验证码界面

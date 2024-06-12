@@ -7,9 +7,10 @@
 #include <QRegularExpression>   // 使用正则
 #include <QRegularExpressionValidator>
 
-TimestampUi::TimestampUi(QWidget *parent) :
+TimestampUi::TimestampUi(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::TimestampUi)
+    ui(new Ui::TimestampUi),
+    network(network_)
 {
     ui->setupUi(this);
     layout();   // 界面格式初始化
@@ -19,13 +20,14 @@ TimestampUi::TimestampUi(QWidget *parent) :
 TimestampUi::~TimestampUi()
 {
     delete ui;
+    delete network;
 }
 
 
 void TimestampUi::on_pushButton_to_convertor_clicked()    // 返回上一级：转换工具总览
 {
     this->close();
-    Convertor* w = new Convertor;
+    Convertor* w = new Convertor(network);
     w->show();
 }
 
