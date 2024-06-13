@@ -1,8 +1,8 @@
 #include "command.h"
-#include "../ui/tools/convertor/timestamp/timestamp.h" // 时间戳转换
+#include "../../feature/tools/convertor/timestamp/timestamp.h" // 时间戳转换
 //#include "../tools/convertor/timestamp/timestamp_ui.h"  // 时间戳界面
-#include "../server/uploads/useruploadsmanager.h"   // 文件上传
-#include "../ui/file/fileuploads.h"
+#include "../../server/uploads/useruploadsmanager.h"   // 文件上传
+#include "../../ui/file/fileuploads.h"
 #include <QDebug>
 #include <QVector>
 #include <QStringList>  // 参数列表

@@ -3,7 +3,7 @@
 #include <QFileInfo>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "../../ui/tools/encipher/base64.h"
+#include "../../feature/tools/encipher/base64.h"
 
 UserUploadsManager::UserUploadsManager(ClientNetwork *network_, QObject *parent) :
     QObject(parent),

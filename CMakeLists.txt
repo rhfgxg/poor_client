@@ -35,18 +35,23 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         # 工具界面
         ui/tools/tools.h ui/tools/tools.cpp ui/tools/tools.ui
             ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp ui/tools/convertor/convertor.ui
-                ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp ui/tools/convertor/timestamp/timestamp_ui.ui
-                ui/tools/convertor/timestamp/timestamp.h ui/tools/convertor/timestamp/timestamp.cpp
-            ui/tools/encipher/md5.h ui/tools/encipher/md5.cpp
-            ui/tools/encipher/base64.h ui/tools/encipher/base64.cpp
+            ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp ui/tools/convertor/timestamp/timestamp_ui.ui
 
         # 文件管理界面
         ui/file/fileuploads.h ui/file/fileuploads.cpp ui/file/fileuploads.ui
 
         # 终端界面
-        terminal/terminal.h terminal/terminal.cpp terminal/terminal.ui
-        terminal/command.h terminal/command.cpp
-            terminal/module/terminaltextedit.h terminal/module/terminaltextedit.cpp
+        ui/terminal/terminal.h ui/terminal/terminal.cpp ui/terminal/terminal.ui
+
+        # 功能实现
+        feature/tools/convertor/timestamp/timestamp.h feature/tools/convertor/timestamp/timestamp.cpp
+        feature/tools/encipher/md5.h feature/tools/encipher/md5.cpp
+        feature/tools/encipher/base64.h feature/tools/encipher/base64.cpp
+
+        feature/terminal/command.h feature/terminal/command.cpp
+
+        # 库文件重写
+        overloading/terminal/terminaltextedit.h overloading/terminal/terminaltextedit.cpp
 
         # 服务器通信
         server/client_network.h server/client_network.cpp

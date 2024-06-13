@@ -1,7 +1,7 @@
 #ifndef TIMESTAMP_UI_H
 #define TIMESTAMP_UI_H
 
-#include "./timestamp.h"
+#include "../../../../feature/tools/convertor/timestamp/timestamp.h"
 #include "../../../../server/client_network.h"    // 传递套接字
 #include <QWidget>
 

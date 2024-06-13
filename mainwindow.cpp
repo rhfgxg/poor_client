@@ -1,7 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "./ui/tools/tools.h"  // 工具包页面
-#include "./terminal/terminal.h"    // 终端页面
+#include "./ui/terminal/terminal.h"    // 终端页面
 #include "./ui/file/fileuploads.h" // 文件上传页面
 
 MainWindow::MainWindow(ClientNetwork *network_, QWidget *parent):

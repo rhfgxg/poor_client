@@ -2,8 +2,8 @@
 #define TERMINAL_H
 
 #include <QWidget>
-#include "./module/terminaltextedit.h"  // 重写的QPlainTextEdit
-#include "../server/client_network.h"
+#include "../../overloading/terminal/terminaltextedit.h"  // 重写的QPlainTextEdit
+#include "../../server/client_network.h"
 
 namespace Ui {
 class Terminal;
