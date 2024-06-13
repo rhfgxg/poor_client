@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "./client/client_network.h"    // 传递套接字
+#include "./server/client_network.h"    // 传递套接字
 #include <QMainWindow>
 
 

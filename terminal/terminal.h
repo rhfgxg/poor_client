@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include "./module/terminaltextedit.h"  // 重写的QPlainTextEdit
-#include "../client/client_network.h"
+#include "../server/client_network.h"
 
 namespace Ui {
 class Terminal;

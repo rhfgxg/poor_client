@@ -1,6 +1,8 @@
 #include "command.h"
-#include "../tools/convertor/timestamp/timestamp.h" // 时间戳转换
+#include "../ui/tools/convertor/timestamp/timestamp.h" // 时间戳转换
 //#include "../tools/convertor/timestamp/timestamp_ui.h"  // 时间戳界面
+#include "../server/uploads/useruploadsmanager.h"   // 文件上传
+#include "../ui/file/fileuploads.h"
 #include <QDebug>
 #include <QVector>
 #include <QStringList>  // 参数列表
@@ -19,6 +21,7 @@ Command::Command()
         "max_window",   // 窗口最大化
         "open_window",  // 打开其他窗口
         "timestamp" // 时间戳转换
+        "uploads"   // 上传文件
     };
 }
 
@@ -52,13 +55,14 @@ const QStringList Command::command_complete(const QString& now_commend) // 命�
 const QString Command::command_execute(const QString& command_first, const QStringList& tokens) // 执行指令，传入指令，返回执行结果（报错等）
 {
     QString result;
-
+// 基本输出指令
     if (command_first == "echo")
-    {// 基本输出指令
+    {
         result = tokens.join(' ');  // join：将字符串列表中的所有字符串连接成一个单独的字符串，接受一个分隔符作为参数，使用这个分隔符将列表中的字符串连接
     }
+// 时间戳转换
     else if (command_first == "timestamp")
-    {// 时间戳转换
+    {
         // 参数列表（时间默认上海，时间戳默认毫秒）
         // 0 转换形式
         // 1 需要转换的值
@@ -91,8 +95,16 @@ const QString Command::command_execute(const QString& command_first, const QStri
 
 
     }
+// 功能介绍
+    else if (command_first == "uploads")
+    {
+        // 参数列表
+        // 第一个参数：要上传的文件
+        result = "指令结果";
+    }
+// 功能实现
     else if (command_first == "指令")
-    {// 功能实现
+    {
         result = "指令结果";
     }
 // 未标识指令

@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "./tools/tools.h"  // 工具包
-#include "./terminal/terminal.h"    // 终端
-#include "client/uploads/useruploadsmanager.h"  // 文件上传
+#include "./ui/tools/tools.h"  // 工具包页面
+#include "./terminal/terminal.h"    // 终端页面
+#include "./ui/file/fileuploads.h" // 文件上传页面
 
 MainWindow::MainWindow(ClientNetwork *network_, QWidget *parent):
     QMainWindow(parent),
@@ -35,9 +35,10 @@ void MainWindow::on_pushButton_terminal_clicked()   // 打开终端界面
 }
 
 
-void MainWindow::on_pushButton_uploads_clicked()    // 图片上传
+void MainWindow::on_pushButton_uploads_clicked()    // 打开图片上传界面
 {
-    UserUploadsManager uploads(network);    // 创建管理对象
-    uploads.uploads("D:/Project/qt/aaa.txt");
+    this->close();
+    FileUploads* w = new FileUploads(network);
+    w->show();
 }
 

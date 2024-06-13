@@ -1,6 +1,6 @@
 #include "mainwindow.h"
-#include "./user/user_login_phone.h"
-#include "./client/client_network.h" // 与服务器通信
+#include "./ui/user/user_login_phone.h"
+#include "./server/client_network.h" // 与服务器通信
 
 #include <QApplication>
 #include <QFile>

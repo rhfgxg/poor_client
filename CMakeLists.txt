@@ -27,24 +27,32 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
 
-        user/user_login_account.h user/user_login_account.cpp user/user_login_account.ui
-        user/user_login_phone.h user/user_login_phone.cpp user/user_login_phone.ui
-        user/user_login_phone_code.h user/user_login_phone_code.cpp user/user_login_phone_code.ui
+        # 用户管理界面
+        ui/user/user_login_account.h ui/user/user_login_account.cpp ui/user/user_login_account.ui
+        ui/user/user_login_phone.h ui/user/user_login_phone.cpp ui/user/user_login_phone.ui
+        ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp ui/user/user_login_phone_code.ui
 
-        tools/tools.h tools/tools.cpp tools/tools.ui
-            tools/convertor/convertor.h tools/convertor/convertor.cpp tools/convertor/convertor.ui
-                tools/convertor/timestamp/timestamp_ui.h tools/convertor/timestamp/timestamp_ui.cpp tools/convertor/timestamp/timestamp_ui.ui
-                tools/convertor/timestamp/timestamp.h tools/convertor/timestamp/timestamp.cpp
-            tools/encipher/md5.h tools/encipher/md5.cpp
-            tools/encipher/base64.h tools/encipher/base64.cpp
+        # 工具界面
+        ui/tools/tools.h ui/tools/tools.cpp ui/tools/tools.ui
+            ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp ui/tools/convertor/convertor.ui
+                ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp ui/tools/convertor/timestamp/timestamp_ui.ui
+                ui/tools/convertor/timestamp/timestamp.h ui/tools/convertor/timestamp/timestamp.cpp
+            ui/tools/encipher/md5.h ui/tools/encipher/md5.cpp
+            ui/tools/encipher/base64.h ui/tools/encipher/base64.cpp
 
+        # 文件管理界面
+        ui/file/fileuploads.h ui/file/fileuploads.cpp ui/file/fileuploads.ui
+
+        # 终端界面
         terminal/terminal.h terminal/terminal.cpp terminal/terminal.ui
         terminal/command.h terminal/command.cpp
             terminal/module/terminaltextedit.h terminal/module/terminaltextedit.cpp
 
-        client/client_network.h client/client_network.cpp
-            client/user/user_login_account_manager.h client/user/user_login_account_manager.cpp
-            client/uploads/useruploadsmanager.h client/uploads/useruploadsmanager.cpp
+        # 服务器通信
+        server/client_network.h server/client_network.cpp
+            server/user/user_manager.h server/user/user_manager.cpp
+            server/uploads/useruploadsmanager.h server/uploads/useruploadsmanager.cpp
+
 
     )
 # Define target properties for Android with Qt 6 as:
