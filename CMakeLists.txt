@@ -29,7 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         # 用户管理界面
         ui/user/user_login_account.h ui/user/user_login_account.cpp
         ui/user/user_login_phone.h ui/user/user_login_phone.cpp
-        ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp ui/user/user_login_phone_code.ui
+        ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp
 
         # 工具界面
         ui/tools/tools.h ui/tools/tools.cpp
