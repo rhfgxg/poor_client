@@ -19,7 +19,6 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
-        mainwindow.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -28,20 +27,20 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
 
         # 用户管理界面
-        ui/user/user_login_account.h ui/user/user_login_account.cpp ui/user/user_login_account.ui
-        ui/user/user_login_phone.h ui/user/user_login_phone.cpp ui/user/user_login_phone.ui
+        ui/user/user_login_account.h ui/user/user_login_account.cpp
+        ui/user/user_login_phone.h ui/user/user_login_phone.cpp
         ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp ui/user/user_login_phone_code.ui
 
         # 工具界面
-        ui/tools/tools.h ui/tools/tools.cpp ui/tools/tools.ui
-            ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp ui/tools/convertor/convertor.ui
-            ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp ui/tools/convertor/timestamp/timestamp_ui.ui
+        ui/tools/tools.h ui/tools/tools.cpp
+            ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp
+            ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp
 
         # 文件管理界面
-        ui/file/fileuploads.h ui/file/fileuploads.cpp ui/file/fileuploads.ui
+        ui/file/fileuploads.h ui/file/fileuploads.cpp
 
         # 终端界面
-        ui/terminal/terminal.h ui/terminal/terminal.cpp ui/terminal/terminal.ui
+        ui/terminal/terminal.h ui/terminal/terminal.cpp
 
         # 功能实现
         feature/tools/convertor/timestamp/timestamp.h feature/tools/convertor/timestamp/timestamp.cpp
@@ -51,7 +50,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         feature/terminal/command.h feature/terminal/command.cpp
 
         # 库文件重写
-        overloading/terminal/terminaltextedit.h overloading/terminal/terminaltextedit.cpp
+        overloading/terminal/plain_text_edit.h overloading/terminal/plain_text_edit.cpp
 
         # 服务器通信
         server/client_network.h server/client_network.cpp

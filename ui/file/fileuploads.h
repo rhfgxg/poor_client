@@ -3,6 +3,8 @@
 
 #include "../../server/client_network.h"    // 传递套接字
 #include <QWidget>
+#include <QPushButton>
+#include <QLineEdit>
 
 namespace Ui {
 class FileUploads;
@@ -24,9 +26,14 @@ private slots:
     void on_pushButton_uploads_clicked();   // 按钮：上传文件
 
 private:
-    Ui::FileUploads *ui;
+    void layout();  // 界面初始化
     ClientNetwork *network; // 服务器通讯套接字
 
+    QPushButton *pushButton_to_mainWindows; // 返回主界面
+    QPushButton *pushButton_filePath;   // 选择文件，添加文件路径
+    QPushButton *pushButton_uploads;    // 文件上传
+
+    QLineEdit *lineEdit_filePath;   // 文件路径输入框
 };
 
 #endif // FILEUPLOADS_H

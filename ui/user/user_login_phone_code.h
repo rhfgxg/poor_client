@@ -3,6 +3,9 @@
 
 #include "../../server/client_network.h"   // 传递套接字
 #include <QWidget>
+#include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
 
 // 输入验证码界面
 // 输入六位验证码自动登录
@@ -32,8 +35,15 @@ private:
     void layout();  // 界面格式初始化
     void label_send_code_again_time();  // 再次发送验证码的倒计时
 private:
-    Ui::UserLoginPhoneCode *ui;
     ClientNetwork *network;
+
+    QPushButton *pushButton_back;   // 返回个人界面
+    QPushButton *pushButton_help;   // 帮助按钮
+
+    QLabel *label_title;  // 提示输入验证码
+    QLabel *label_tip;    // 显示验证码发送的手机号
+
+    QLineEdit *lineEdit_code;  // 验证码输入框
 };
 
 #endif // USER_LOGIN_PHONE_CODE_H

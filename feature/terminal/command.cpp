@@ -2,16 +2,16 @@
 #include "../../feature/tools/convertor/timestamp/timestamp.h" // 时间戳转换
 //#include "../tools/convertor/timestamp/timestamp_ui.h"  // 时间戳界面
 #include "../../server/uploads/useruploadsmanager.h"   // 文件上传
-#include "../../ui/file/fileuploads.h"
+//#include "../../ui/file/fileuploads.h"    // 文件上传界面
 #include <QDebug>
-#include <QVector>
 #include <QStringList>  // 参数列表
 #include <QCoreApplication> // 获取可执行文件的地址（debug文件夹），从而获取指令记录文件的地址
 #include <QDateTime>    // 获取写入指令运行的时间
 #include <QFile>    // 使用指令记录文件
 
 // 终端指令类
-Command::Command()
+Command::Command(ClientNetwork *network_):
+    network(network_)
 {
     // 指令列表
     command_vector = {
@@ -19,7 +19,7 @@ Command::Command()
         "exit!", // 退出终端
         "help", // 帮助
         "max_window",   // 窗口最大化
-        "open_window",  // 打开其他窗口
+        "open_window",  // 打开功能的ui界面
         "timestamp" // 时间戳转换
         "uploads"   // 上传文件
     };
@@ -70,9 +70,13 @@ const QString Command::command_execute(const QString& command_first, const QStri
         // 3 结果的类型
         Timestamp timestamp;
 
-        if (*tokens.begin() == "--timestamp_to_time")
+        if (tokens.isEmpty())    // 参数链表为空
         {
-            if ((tokens.begin()+1) == tokens.cend())    // 第二个参数指向尾部表示参数不足
+            result = "参数不足，参考：timestamp --timestamp_to_time 需要转换的时间戳 时间戳类型（默认毫秒） 转换后时间的时区（默认上海）";
+        }
+        else if (*tokens.begin() == "--timestamp_to_time")
+        {
+            if ((tokens.begin()+1) == tokens.end())    // 第二个参数指向尾部表示参数不足
             {
                 result = "参数不足，参考：timestamp --timestamp_to_time 需要转换的时间戳 时间戳类型（默认毫秒） 转换后时间的时区（默认上海）";
             }
@@ -81,7 +85,7 @@ const QString Command::command_execute(const QString& command_first, const QStri
         }
         else if (*tokens.begin() == "--time_to_timestamp")
         {
-            if ((tokens.begin()+1) == tokens.cend())    // 第二个参数指向尾部表示参数不足
+            if ((tokens.begin()+1) == tokens.end())    // 第二个参数指向尾部表示参数不足
             {
                 result = "参数不足，参考：timestamp --time_to_timestamp 需要转换的时间 时间时区（默认上海） 转换后时间类型（默认毫秒）";
             }
@@ -100,7 +104,19 @@ const QString Command::command_execute(const QString& command_first, const QStri
     {
         // 参数列表
         // 第一个参数：要上传的文件
-        result = "指令结果";
+        if (tokens.isEmpty())    // 参数链表为空
+        {
+            result = "参数不足，参考：uploads 需要上传的文件路径";
+        }
+        else
+        {
+            QString file_path = *(tokens.begin());
+
+            UserUploadsManager uploads(network);    // 创建管理对象
+            uploads.uploads(file_path);   // 上传文件
+            result = "上传成功";
+        }
+
     }
 // 功能实现
     else if (command_first == "指令")

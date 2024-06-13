@@ -1,41 +1,66 @@
 #include "user_login_phone_code.h"
-#include "ui_user_login_phone_code.h"
-
 #include "./user_login_phone.h" // 手机号登录界面
 
 #include <QTimer>   // 定时器
 #include <QPushButton>
 #include <QLabel>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 // 手机号登录_验证码界面
 UserLoginPhoneCode::UserLoginPhoneCode(ClientNetwork *network_, QString phone, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::UserLoginPhoneCode),
     network(network_)
 {
-    ui->setupUi(this);
     layout();   // 界面格式初始化
-    ui->label_tip->setText("短信已发送至：" + phone);  // 修改手机号显示内容
+    label_tip->setText("短信已发送至：" + phone);  // 修改手机号显示内容
+    connect(pushButton_back, &QPushButton::clicked, this, &UserLoginPhoneCode::on_pushButton_back_clicked);
+    connect(pushButton_help, &QPushButton::clicked, this, &UserLoginPhoneCode::on_pushButton_help_clicked);
 }
 
 
 UserLoginPhoneCode::~UserLoginPhoneCode()
 {
-    delete ui;
     delete network;
+
+    delete pushButton_back;   // 返回个人界面
+    delete pushButton_help;   // 帮助按钮
+
+    delete label_title;  // 提示输入验证码
+    delete label_tip;    // 显示验证码发送的手机号
+
+    delete lineEdit_code;  // 验证码输入框
 }
 
 
 // 自定义私有函数
 void UserLoginPhoneCode::layout()    // 界面格式初始化
 {
+    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
+        QHBoxLayout *hBpxLayout_help = new QHBoxLayout;
+            pushButton_back = new QPushButton("返回");     // 返回个人界面
+            pushButton_help = new QPushButton("帮助");  // 帮助按钮
+        hBpxLayout_help->addWidget(pushButton_back);
+        hBpxLayout_help->addWidget(pushButton_help);
+
+        QVBoxLayout *vBoxLayout_title = new QVBoxLayout;
+            label_title = new QLabel("请输入验证码");  // 提示输入验证码
+            label_tip = new QLabel("短信已发送至 ");    // 显示验证码发送的手机号
+        vBoxLayout_title->addWidget(label_title);
+        vBoxLayout_title->addWidget(label_tip);
+
+        lineEdit_code = new QLineEdit;  // 验证码输入框
+    vBoxLayout->addLayout(hBpxLayout_help);
+    vBoxLayout->addLayout(vBoxLayout_title);
+    vBoxLayout->addWidget(lineEdit_code);
+
     // label_title格式
     QFont font_title("Arial", 20, QFont::Bold); // Arial字体，20号字，粗体
-    ui->label_title->setFont(font_title);   // 主标题字体
+    this->label_title->setFont(font_title);   // 主标题字体
     label_send_code_again_time();   // 再次发送验证码的倒计时
 
     // 验证码输入框提示字符
-    ui->lineEdit_code->setPlaceholderText("请输入六位验证码");
+    this->lineEdit_code->setPlaceholderText("请输入六位验证码");
 
     // 界面创建60秒后显示按钮：“重新发送验证码”和”使用短信验证码“
     // 创建定时器

@@ -2,7 +2,7 @@
 #define TERMINAL_H
 
 #include <QWidget>
-#include "../../overloading/terminal/terminaltextedit.h"  // 重写的QPlainTextEdit
+#include "../../overloading/terminal/plain_text_edit.h"  // 重写的QPlainTextEdit
 #include "../../server/client_network.h"
 
 namespace Ui {
@@ -20,13 +20,10 @@ public:
     void on_command_complete_list(const QStringList& completionSuggestion);  // 指令补全
 private:
     void layout();  // 界面格式初始化
-    void connects();    // 信号槽关联
 
 private:
-    Ui::Terminal *ui;
-    TerminalTextEdit *plainTextEdit_terminal;   // 使用自定义的TerminalTextEdit：重写的QPlainTextEdit
     ClientNetwork *network; // 服务器通讯套接字
-
+    PlainTextEdit *plainTextEdit_terminal;   // 使用自定义的TerminalTextEdit：重写的QPlainTextEdit
 };
 
 #endif // TERMINAL_H

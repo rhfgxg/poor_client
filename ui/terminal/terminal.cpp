@@ -1,5 +1,5 @@
 #include "terminal.h"
-#include "ui_terminal.h"
+//#include "ui_terminal.h"
 
 #include "../../mainwindow.h"
 #include <QGridLayout>
@@ -7,19 +7,19 @@
 // 终端界面类
 Terminal::Terminal(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Terminal),
     network(network_)
 {
-    ui->setupUi(this);
-
     layout();   // 界面布局初始化
-    connects(); // 设置信号槽
+    connect(plainTextEdit_terminal, &PlainTextEdit::commandEntered, this, &Terminal::on_command_execute_result);
+    connect(plainTextEdit_terminal, &PlainTextEdit::commandTab, this, &Terminal::on_command_complete_list);
+
 }
 
 Terminal::~Terminal()
 {
-    delete ui;
     delete network;
+
+    delete plainTextEdit_terminal;
 }
 
 
@@ -51,7 +51,9 @@ void Terminal::on_command_complete_list(const QStringList& completionSuggestion)
 // 自定义私有函数
 void Terminal::layout() // 界面格式初始化
 {
-    plainTextEdit_terminal = new TerminalTextEdit(this);  // 添加一个输入界面
+    setWindowTitle("终端");
+
+    plainTextEdit_terminal = new PlainTextEdit(network, this);  // 添加一个输入界面
     plainTextEdit_terminal->resize(1000, 1000);
     plainTextEdit_terminal->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // 禁用滚动条
     plainTextEdit_terminal->setStyleSheet("QPlainTextEdit {"
@@ -69,9 +71,3 @@ void Terminal::layout() // 界面格式初始化
     this->setLayout(layout);
 }
 
-void Terminal::connects()   // 信号槽关联
-{
-    connect(plainTextEdit_terminal, &TerminalTextEdit::commandEntered, this, &Terminal::on_command_execute_result);
-    connect(plainTextEdit_terminal, &TerminalTextEdit::commandTab, this, &Terminal::on_command_complete_list);
-
-}

@@ -3,6 +3,10 @@
 
 #include "../../server/user/user_manager.h"
 #include <QWidget>
+#include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
 
 // 用户账号密码登录界面
 namespace Ui {
@@ -43,10 +47,21 @@ private:
     void layout();  // 界面格式初始化
 
 private:
-    Ui::UserLoginAccount *ui;
     UserManager *user_manager; // 创建一个用户管理对象，方便接收来自他的信号
-
     ClientNetwork *network;
+
+    QPushButton *pushButton_back;   // 返回号码登陆
+    QPushButton *pushButton_help;   // 帮助
+    QPushButton *pushButton_look_password;  // 显示密码
+    QPushButton *pushButton_login;  // 登录
+    QPushButton *pushButton_login_phone;    // 验证码登录
+    QPushButton *pushButton_wechat; // 微信登录
+    QPushButton *pushButton_qq; // qq登录
+
+    QLineEdit *lineEdit_account;    // 账号输入框
+    QLineEdit *lineEdit_password;   // 密码输入框
+
+    QCheckBox *checkBox_protocol;   // 同意协议
 };
 
 #endif // USER_LOGIN_H

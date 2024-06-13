@@ -3,18 +3,20 @@
 
 #include <QObject>
 #include <QStringList>
+#include "../../server/client_network.h"    // 传递服务器通讯套接字
 
 // 终端指令处理
 class Command
 {
 public:
-    Command();
+    Command(ClientNetwork *network_);
     const QStringList command_complete(const QString& now_command); // 指令补全
     const QString command_execute(const QString& command_first, const QStringList& tokens); // 执行指令，传入指令和参数列表，返回执行结果（报错等）
     void command_log(const QString& command); // 添加指令到记录
 
 private:
     QVector<QString> command_vector;   // 指令列表，保存所有指令
+    ClientNetwork* network;
 };
 
 #endif // COMMAND_H

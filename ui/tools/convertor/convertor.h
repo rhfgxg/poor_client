@@ -3,6 +3,7 @@
 
 #include "../../../server/client_network.h"
 #include <QWidget>
+#include <QPushButton>
 
 namespace Ui {
 class Convertor;
@@ -24,8 +25,12 @@ private slots:
 
 
 private:
-    Ui::Convertor *ui;
+    void layout();
+
     ClientNetwork *network; // 服务器通讯套接字
+
+    QPushButton *pushButton_to_tools;
+    QPushButton *pushButton_to_timestamp;
 };
 
 #endif // CONVERTOR_H

@@ -1,20 +1,25 @@
 #include "fileuploads.h"
-#include "ui_fileuploads.h"
 #include "../../mainwindow.h"  // 主界面
 #include "../../server/uploads/useruploadsmanager.h"  // 文件上传
 #include <QFileDialog>
-
+#include <QVBoxLayout>
 FileUploads::FileUploads(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::FileUploads),
     network(network_)
 {
-    ui->setupUi(this);
+    layout();
+    connect(pushButton_to_mainWindows, &QPushButton::clicked, this, &FileUploads::on_pushButton_to_mainWindows_clicked);
+    connect(pushButton_filePath, &QPushButton::clicked, this, &FileUploads::on_pushButton_filePath_clicked);
+    connect(pushButton_uploads, &QPushButton::clicked, this, &FileUploads::on_pushButton_uploads_clicked);
+
 }
 
 FileUploads::~FileUploads()
 {
-    delete ui;
+    delete pushButton_to_mainWindows;
+    delete pushButton_filePath;
+    delete pushButton_uploads;
+    delete lineEdit_filePath;
     delete network;
 }
 
@@ -38,7 +43,7 @@ void FileUploads::on_pushButton_filePath_clicked()
 
     if (!file_path.isEmpty())    // 如果打开了文件
     {
-        ui->lineEdit_filePath->setText(file_path);
+        this->lineEdit_filePath->setText(file_path);
     }
     else
     {
@@ -49,9 +54,28 @@ void FileUploads::on_pushButton_filePath_clicked()
 // 上传
 void FileUploads::on_pushButton_uploads_clicked()
 {
-    QString file_path = ui->lineEdit_filePath->text();
+    QString file_path = this->lineEdit_filePath->text();
 
     UserUploadsManager uploads(network);    // 创建管理对象
     uploads.uploads(file_path);   // 上传文件
 }
 
+// 界面初始化
+void FileUploads::layout()
+{
+    setWindowTitle("文件上传");
+
+    pushButton_to_mainWindows = new QPushButton("返回主界面");
+    pushButton_filePath = new QPushButton("选择文件");
+    pushButton_uploads = new QPushButton("上传文件");
+
+    lineEdit_filePath = new QLineEdit;
+
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->addWidget(pushButton_to_mainWindows);
+    layout->addWidget(lineEdit_filePath);
+    layout->addWidget(pushButton_filePath);
+    layout->addWidget(pushButton_uploads);
+
+
+}

@@ -1,11 +1,13 @@
-#include "terminaltextedit.h"
+#include "plain_text_edit.h"
 #include "../../feature/terminal/command.h" // 指令处理类：指令补全
 
 #include <QStringList>
 #include <QCoreApplication>
 #include <QFile>
-TerminalTextEdit::TerminalTextEdit(QWidget *parent) :
-    QPlainTextEdit(parent), prompt("username-windows > ")
+PlainTextEdit::PlainTextEdit(ClientNetwork *network_, QWidget *parent) :
+    QPlainTextEdit(parent),
+    prompt("username-windows > "),
+    network(network_)
 {
     appendPlainText(prompt + "Welcome to poor");    // 欢迎界面
     appendPlainText(prompt);    // 第一行指令
@@ -15,7 +17,7 @@ TerminalTextEdit::TerminalTextEdit(QWidget *parent) :
 // 当用户在窗口中按下键盘上的任何按键时，Qt 会生成一个键盘事件，并将其传递给具有键盘焦点的窗口小部件（例如文本框、按钮等）。
 // 键盘事件包含有关按下的键的信息，如键码和键的状态
 // 重写此函数，在按下回车时处理内容
-void TerminalTextEdit::keyPressEvent(QKeyEvent *event)
+void PlainTextEdit::keyPressEvent(QKeyEvent *event)
 {
 // 处理回车键，执行指令
     // 键盘事件的枚举 回车：Qt::Key_Return，Qt::Key_Enter，Tab：Qt::Key_Tab，上下键：Qt::Key_Up，Qt::Key_Down
@@ -25,7 +27,7 @@ void TerminalTextEdit::keyPressEvent(QKeyEvent *event)
         QString command = toPlainText().split("\n").last();
         command = command.remove(0, prompt.length()).trimmed(); // 去掉提示符和前后空白
 
-        Command new_command;
+        Command new_command(network);
         new_command.command_log(command);    // 调用日志函数，传入指令
 
         QStringList tokens = command.split(' ', Qt::SkipEmptyParts); // 将指令分隔成字符串列表
@@ -64,7 +66,7 @@ void TerminalTextEdit::keyPressEvent(QKeyEvent *event)
         QString commandPart = currentLine.remove(0, prompt.length()).trimmed(); // 去掉提示符和前后空白
 
         // 调用命令补全函数, 返回一个匹配链表
-        Command new_command;
+        Command new_command(network);
         QStringList completionSuggestion = new_command.command_complete(commandPart);
 
         if (completionSuggestion.size() == 1)

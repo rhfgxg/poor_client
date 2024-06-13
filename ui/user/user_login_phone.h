@@ -3,6 +3,10 @@
 
 #include "../../server/client_network.h"
 #include <QWidget>
+#include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
+#include <QCheckBox>
 
 // 用户验证码登录界面
 namespace Ui {
@@ -37,8 +41,21 @@ private:
 
 
 private:
-    Ui::UserLoginPhone *ui;
     ClientNetwork *network;
+
+    QPushButton *pushButton_back;   // 返回个人界面
+    QPushButton *pushButton_help;   // 帮助按钮
+    QPushButton *pushButton_send_code;  // 发送验证码界面
+    QPushButton *pushButton_login_account;  // 账号登陆界面
+    QPushButton *pushButton_wechat; // 微信登录
+    QPushButton *pushButton_qq; // qq登录
+
+    QLabel *label_tip;  // 提示
+    QLabel *label_phone;    // 提示输入手机号
+
+    QLineEdit *lineEdit_phone;  // 手机号输入框
+    QCheckBox *checkBox_protocol;   // 同意协议
+
 };
 
 #endif // USER_LOGIN_PHONE_H

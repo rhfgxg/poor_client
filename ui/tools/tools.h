@@ -3,6 +3,7 @@
 
 #include "../../server/client_network.h"    // 传递套接字
 #include <QWidget>
+#include <QPushButton>
 
 namespace Ui {
 class Tools;
@@ -23,9 +24,13 @@ private slots:
     void on_pushButton_to_convertor_clicked();
 
 private:
-    Ui::Tools *ui;
+    void layout();  // 界面初始化
+
+
     ClientNetwork *network; // 服务器通讯套接字
 
+    QPushButton *pushButton_to_mainWindow;
+    QPushButton *pushButton_to_convertor;
 };
 
 #endif // TOOLS_H
