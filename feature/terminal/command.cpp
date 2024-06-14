@@ -144,7 +144,6 @@ void Command::command_log(const QString& command_str)   // 指令加入记录
 
     QString log_new = user_name_str + "-" + date_time_str + ": " + command_str + "\n";  // 拼接成完整的记录
 
-
     // 使用QFile对象打开文件，QIODevice::ReadWrite表示读写模式，QIODevice::Text指定文件是文本文件，QIODevice::Append指定每次写入文件时，数据都将追加到文件的当前结尾，而不是覆盖现有内容
     QFile file(bash_history_path);
     if (file.open(QIODevice::ReadWrite | QIODevice::Text | QIODevice::Append))
@@ -168,7 +167,7 @@ void Command::command_log(const QString& command_str)   // 指令加入记录
     }
     else
     {
-        qDebug() << "Failed to open file: " << bash_history_path;
+        qDebug() << "指令日志打开失败: " << bash_history_path;
     }
 
 }

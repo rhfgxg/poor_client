@@ -1,6 +1,7 @@
 #include "./user_manager.h"
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QNetworkInterface>
 
 UserManager::UserManager(ClientNetwork *network_, QObject *parent) :
     QObject(parent),
@@ -18,11 +19,29 @@ UserManager::~UserManager()
 // 账号登录按钮调用此函数，传入账号和密码
 void UserManager::login(const QString &username, const QString &password)
 {
+    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
+    foreach (const QNetworkInterface &interface, interfaces)
+    {
+        QList<QNetworkAddressEntry> entries = interface.addressEntries();
+        foreach (const QNetworkAddressEntry &entry, entries)
+        {
+            if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
+            {
+                qDebug() << "客户端IP:" << entry.ip().toString();
+            }
+        }
+    }
+
+    qDebug() << "系统版本:" << QSysInfo::prettyProductName();
+
+
     // 使用json对象，打包和发送数据
     QJsonObject request;
     request["type"] = "LOGIN";
     request["username"] = username; // 用户名
     request["password"] = password; // 用户密码
+    request["client_id"] = network->returnClientId();   // 传递客户端id
+
 
     QJsonDocument messageDoc(request);
     QByteArray message = messageDoc.toJson();

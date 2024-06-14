@@ -13,8 +13,9 @@ public:
     explicit ClientNetwork(QObject *parent = nullptr);
     ~ClientNetwork();
 
-    void connectToServer(const QString &host, quint16 port);
-    void sendMessage(const QByteArray &message);
+    void connectToServer(const QString &host, quint16 port);    // 链接服务器
+    void sendMessage(const QByteArray &message);    // 发送数据
+    const QString returnClientId();   // 获取客户端标记
 
 signals:
     // 使用信号传递发回的json数据给对应接口
@@ -27,7 +28,10 @@ private slots:
     void readData();    // 接受服务器发来的数据
 
 private:
-    QTcpSocket *tcpSocket;
+    void initClientId(); // 创建或在本地获取客户端id，然后初始化成员：client_id
+
+    QTcpSocket *tcpSocket;  // 套接字
+    QString client_id;   // 客户端标记ID，全球唯一的UUid
 };
 
 #endif // CLIENT_NETWORK_H
