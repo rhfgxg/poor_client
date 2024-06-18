@@ -25,38 +25,35 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(poor_client
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+# UI界面
+        ui/user/user_login_account.h ui/user/user_login_account.cpp # 账号登录界面
+        ui/user/user_login_phone.h ui/user/user_login_phone.cpp # 手机号登录界面
+        ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp   # 验证码输入界面
 
-        # 用户管理界面
-        ui/user/user_login_account.h ui/user/user_login_account.cpp
-        ui/user/user_login_phone.h ui/user/user_login_phone.cpp
-        ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp
+        ui/tools/tools.h ui/tools/tools.cpp # 工具集界面显示
+            ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp # 转换器界面显示
+            ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp   # 时间戳界面显示
 
-        # 工具界面
-        ui/tools/tools.h ui/tools/tools.cpp
-            ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp
-            ui/tools/convertor/timestamp/timestamp_ui.h ui/tools/convertor/timestamp/timestamp_ui.cpp
+        ui/file/fileuploads.h ui/file/fileuploads.cpp   # 文件管理界面显示
 
-        # 文件管理界面
-        ui/file/fileuploads.h ui/file/fileuploads.cpp
+        ui/terminal/terminal.h ui/terminal/terminal.cpp # 终端界面显示
 
-        # 终端界面
-        ui/terminal/terminal.h ui/terminal/terminal.cpp
+# 功能实现
+        feature/tools/convertor/timestamp/timestamp.h feature/tools/convertor/timestamp/timestamp.cpp   # 时间戳转换处理
+        feature/tools/encipher/md5.h feature/tools/encipher/md5.cpp # md5加密处理
+        feature/tools/encipher/base64.h feature/tools/encipher/base64.cpp   # base64转换处理
 
-        # 功能实现
-        feature/tools/convertor/timestamp/timestamp.h feature/tools/convertor/timestamp/timestamp.cpp
-        feature/tools/encipher/md5.h feature/tools/encipher/md5.cpp
-        feature/tools/encipher/base64.h feature/tools/encipher/base64.cpp
+        feature/terminal/feature.h feature/terminal/feature.cpp # 终端效果
+        feature/terminal/command.h feature/terminal/command.cpp # 终端指令处理
+        feature/terminal/bin/sl.h feature/terminal/bin/sl.cpp   # 终端指令：小火车：sl
 
-        feature/terminal/command.h feature/terminal/command.cpp
+# 库文件重写
+        overloading/terminal/plain_text_edit.h overloading/terminal/plain_text_edit.cpp # 重写 QPlainTextEdit类，实现终端
 
-        # 库文件重写
-        overloading/terminal/plain_text_edit.h overloading/terminal/plain_text_edit.cpp
-
-        # 服务器通信
-        server/client_network.h server/client_network.cpp
-            server/user/user_manager.h server/user/user_manager.cpp
-            server/uploads/useruploadsmanager.h server/uploads/useruploadsmanager.cpp
-
+# 服务器通信
+        server/client_network.h server/client_network.cpp   # 服务器通信管理
+            server/user/user_manager.h server/user/user_manager.cpp # 用户活动管理
+            server/uploads/useruploadsmanager.h server/uploads/useruploadsmanager.cpp   # 用户上传文件
 
     )
 # Define target properties for Android with Qt 6 as:
