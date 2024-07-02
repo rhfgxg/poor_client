@@ -1,8 +1,8 @@
 #include "terminal.h"
-//#include "ui_terminal.h"
-
 #include "../../mainwindow.h"
 #include <QGridLayout>
+#include "../../feature/terminal/bin/sl.h"  // 小火车动画
+
 
 // 终端界面类
 Terminal::Terminal(ClientNetwork *network_, QWidget *parent) :
@@ -10,8 +10,7 @@ Terminal::Terminal(ClientNetwork *network_, QWidget *parent) :
     network(network_)
 {
     layout();   // 界面布局初始化
-    connect(plainTextEdit_terminal, &PlainTextEdit::commandEntered, this, &Terminal::on_command_execute_result);
-    connect(plainTextEdit_terminal, &PlainTextEdit::commandTab, this, &Terminal::on_command_complete_list);
+    connect(plainTextEdit_terminal, &PlainTextEdit::commandEntered, this, &Terminal::on_command_execute_result);    // 回车键
 
 }
 
@@ -24,10 +23,10 @@ Terminal::~Terminal()
 
 
 // 自定义槽函数
-// 接收 重写类的自定义commandEntered信号，信号传递指令和参数列表
+// 接收 重写类的自定义commandEntered(回车)信号，在输入相关指令时发出
+// 信号传递指令和参数列表
 void Terminal::on_command_execute_result(const QString& command_first, const QStringList& tokens)
 {
-
 // 对终端界面进行修改的指令白名单：例如终端颜色，退出终端等
     if (command_first == "exit!")   // 退出终端
     {
@@ -39,13 +38,11 @@ void Terminal::on_command_execute_result(const QString& command_first, const QSt
     {
         this->setWindowState(Qt::WindowMaximized);
     }
-
-}
-
-// 接收 重写类的自定义commandEntered信号，信号传递备选的所有补全指令
-void Terminal::on_command_complete_list(const QStringList& completionSuggestion)
-{
-
+    else if (command_first == "sl")   // 小火车彩蛋
+    {
+        Sl *sl = new Sl(this->plainTextEdit_terminal, this);  // 创建 Sl 类实例
+        sl->start();
+    }
 }
 
 // 自定义私有函数
@@ -70,4 +67,6 @@ void Terminal::layout() // 界面格式初始化
     plainTextEdit_terminal->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);  // 设置QPlainTextEdit的大小策略，使其能够扩展
     this->setLayout(layout);
 }
+
+
 

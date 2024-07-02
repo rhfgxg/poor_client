@@ -1,9 +1,11 @@
 #include "plain_text_edit.h"
 #include "../../feature/terminal/command.h" // 指令处理类：指令补全
-
 #include <QStringList>
 #include <QCoreApplication>
 #include <QFile>
+#include <QThread>
+#include <QTimer>
+
 PlainTextEdit::PlainTextEdit(ClientNetwork *network_, QWidget *parent) :
     QPlainTextEdit(parent),
     prompt("username-windows > "),
@@ -13,47 +15,40 @@ PlainTextEdit::PlainTextEdit(ClientNetwork *network_, QWidget *parent) :
     appendPlainText(prompt);    // 第一行指令
 }
 
-// 事件处理函数，用于处理键盘按键事件。
-// 当用户在窗口中按下键盘上的任何按键时，Qt 会生成一个键盘事件，并将其传递给具有键盘焦点的窗口小部件（例如文本框、按钮等）。
-// 键盘事件包含有关按下的键的信息，如键码和键的状态
-// 重写此函数，在按下回车时处理内容
+// 处理键盘按键事件。
 void PlainTextEdit::keyPressEvent(QKeyEvent *event)
 {
 // 处理回车键，执行指令
-    // 键盘事件的枚举 回车：Qt::Key_Return，Qt::Key_Enter，Tab：Qt::Key_Tab，上下键：Qt::Key_Up，Qt::Key_Down
     if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        // 获取当前行的文本
-        QString command = toPlainText().split("\n").last();
+        // 获取指令和参数
+        QString command = toPlainText().split("\n").last(); // 获取当前行的文本
         command = command.remove(0, prompt.length()).trimmed(); // 去掉提示符和前后空白
 
-        Command new_command(network);
-        new_command.command_log(command);    // 调用日志函数，传入指令
-
-        QStringList tokens = command.split(' ', Qt::SkipEmptyParts); // 将指令分隔成字符串列表
-
-        if (!tokens.isEmpty())
+        if (!command.isEmpty()) // 输入不为空
         {
-            QString command_first = tokens.takeFirst(); // 获取第一个元素作为指令
-        // 对终端界面进行修改的指令白名单：例如终端颜色，退出终端等
-            if (command_first == "exit!" || command_first == "max_window")
+            Command new_command(network);   // 指令处理类
+            new_command.command_log(command);    // 调用日志函数，传入指令
+
+            QStringList tokens = command.split(' ', Qt::SkipEmptyParts); // 将指令分隔成字符串列表
+
+            QString command_first = tokens.takeFirst(); // 取出第一个元素作为指令，剩余元素为参数
+        // 需要修改窗口的指令：退出终端，窗口大小等
+            if (command_first == "exit!" || command_first == "max_window" || command_first == "sl")
             {
-                // 发射信号，将对窗口修改的指令做特殊处理
+                // 发射信号，如果是需要修改窗口的指令，由界面类处理
                 emit commandEntered(command_first, tokens);
             }
         // 处理其他指令
             else
             {
-                // 实现命令处理逻辑
                 QString result = new_command.command_execute(command_first, tokens); // 传入指令到执行函数
                 appendPlainText(result);   // 显示执行结果
             }
         }
         insertPlainText("\n");  // 执行结果后换行
-
-        // 在指令执行完后，插入新的命令提示符
-        insertPlainText(prompt);
-        moveCursor(QTextCursor::End);
+        insertPlainText(prompt);    // 在指令执行完后，插入新的命令提示符
+        moveCursor(QTextCursor::End);   // 移动光标到最后一行
 
         // 防止默认处理
         event->accept();
@@ -139,4 +134,11 @@ void PlainTextEdit::keyPressEvent(QKeyEvent *event)
         }
         QPlainTextEdit::keyPressEvent(event);
     }
+
+    // 当用户在窗口中按下键盘上的任何按键时，Qt 会生成一个键盘事件，并将其传递给具有键盘焦点的窗口小部件（例如文本框、按钮等）
+    // 键盘事件包含有关按下的键的信息，如键码和键的状态
+    // 键盘事件的枚举
+    // 回车：Qt::Key_Return、Qt::Key_Enter
+    // Tab：Qt::Key_Tab
+    // 上下键：Qt::Key_Up、Qt::Key_Down
 }

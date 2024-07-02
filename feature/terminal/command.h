@@ -5,6 +5,15 @@
 #include <QStringList>
 #include "../../server/client_network.h"    // 传递服务器通讯套接字
 
+/*
+ * 指令处理逻辑：
+ * 用户在键盘输入指令
+ * 按下回车，激发键盘事件，由重写的QPlainTextEdit类处理
+ * 根据输入内容，
+ * 普通指令：调用指令处理类，
+ * 窗口相关：发射信号传给窗口类处理
+*/
+
 // 终端指令处理
 class Command
 {

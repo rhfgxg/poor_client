@@ -11,14 +11,13 @@ class PlainTextEdit: public QPlainTextEdit
     Q_OBJECT
 public:
     explicit PlainTextEdit(ClientNetwork *network_, QWidget *parent = nullptr);
+    void sl();
 
 signals:
-    // 自定义信号，携带指令字符串作为信息
-    void commandEntered(const QString& command_first, const QStringList& now_args);
-    void commandTab(const QStringList& completionSuggestion);
+    void commandEntered(const QString& command_first, const QStringList& now_args); // 回车键信号，特殊处理窗口相关指令
 
 protected:
-    void keyPressEvent(QKeyEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;  // 处理键盘事件
 
 private:
     QString prompt;

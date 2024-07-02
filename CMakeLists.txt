@@ -43,7 +43,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         feature/tools/encipher/md5.h feature/tools/encipher/md5.cpp # md5加密处理
         feature/tools/encipher/base64.h feature/tools/encipher/base64.cpp   # base64转换处理
 
-        feature/terminal/feature.h feature/terminal/feature.cpp # 终端效果
         feature/terminal/command.h feature/terminal/command.cpp # 终端指令处理
         feature/terminal/bin/sl.h feature/terminal/bin/sl.cpp   # 终端指令：小火车：sl
 

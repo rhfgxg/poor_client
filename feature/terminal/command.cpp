@@ -20,12 +20,16 @@ Command::Command(ClientNetwork *network_):
         "help", // 帮助
         "max_window",   // 窗口最大化
         "open_window",  // 打开功能的ui界面
-        "timestamp" // 时间戳转换
+        "sl",   // 显示小火车
+        "timestamp", // 时间戳转换
         "uploads"   // 上传文件
     };
 }
 
-const QStringList Command::command_complete(const QString& now_commend) // 命令补全
+// 命令补全
+// 参数：当前输入的指令
+// 返回执行结果：所有匹配的指令链表
+const QStringList Command::command_complete(const QString& now_commend)
 {
     QStringList completions;
 
@@ -52,7 +56,10 @@ const QStringList Command::command_complete(const QString& now_commend) // 命�
     return completions; // 返回匹配项列表，可能是单个匹配、多个匹配或用户输入
 }
 
-const QString Command::command_execute(const QString& command_first, const QStringList& tokens) // 执行指令，传入指令，返回执行结果（报错等）
+// 执行指令
+// 参数：指令，参数链表
+// 返回执行结果
+const QString Command::command_execute(const QString& command_first, const QStringList& tokens)
 {
     QString result;
 // 基本输出指令
@@ -132,7 +139,9 @@ const QString Command::command_execute(const QString& command_first, const QStri
     return result;
 }
 
-void Command::command_log(const QString& command_str)   // 指令加入记录
+// 指令加入记录
+// 参数：指令+参数的字符串
+void Command::command_log(const QString& command_str)
 {
     QString exePath = QCoreApplication::applicationDirPath();   // 获取可执行文件地址
     QString bash_history_path = exePath + "/data/terminal/home/root/.bash_history.txt"; // 指令记录的地址

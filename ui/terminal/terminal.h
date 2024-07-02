@@ -16,12 +16,13 @@ class Terminal : public QWidget
 public:
     explicit Terminal(ClientNetwork *network_, QWidget *parent = nullptr);
     ~Terminal();
+
+private slots:
     void on_command_execute_result(const QString& command_first, const QStringList& tokens);    // 指令执行
-    void on_command_complete_list(const QStringList& completionSuggestion);  // 指令补全
+
 private:
     void layout();  // 界面格式初始化
 
-private:
     ClientNetwork *network; // 服务器通讯套接字
     PlainTextEdit *plainTextEdit_terminal;   // 使用自定义的TerminalTextEdit：重写的QPlainTextEdit
 };
