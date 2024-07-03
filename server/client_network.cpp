@@ -71,10 +71,14 @@ void ClientNetwork::sendMessage(const QByteArray &message)
     // 写入数据到套接字, 然后发送
     qint64 bytesWritten = tcpSocket->write(message);
 
+    // write 将数据写入到内部缓冲区。依赖于 Qt 框架的自动缓冲和发送机制，异步操作
+    // flush 强制将内部缓冲区中的数据发送，同步操作，会阻塞线程，直到数据发送完毕
+
     // 检查是否有数据实际被写入
     if(bytesWritten > 0)
     {
         qDebug() << "成功写入" << bytesWritten << "字节数据";
+//        tcpSocket->flush(); // 确保数据立即发送，立刻清空缓冲区，发送数据
     }
     else
     {

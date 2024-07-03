@@ -32,8 +32,7 @@ void UserManager::login(const QString &username, const QString &password)
         }
     }
 
-    qDebug() << "系统版本:" << QSysInfo::prettyProductName();
-
+//    qDebug() << "系统版本:" << QSysInfo::prettyProductName();
 
     // 使用json对象，打包和发送数据
     QJsonObject request;
@@ -41,7 +40,6 @@ void UserManager::login(const QString &username, const QString &password)
     request["username"] = username; // 用户名
     request["password"] = password; // 用户密码
     request["client_id"] = network->returnClientId();   // 传递客户端id
-
 
     QJsonDocument messageDoc(request);
     QByteArray message = messageDoc.toJson();

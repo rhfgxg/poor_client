@@ -23,7 +23,7 @@ UserLoginPhone::UserLoginPhone(ClientNetwork *network_, QWidget *parent) :
 
 UserLoginPhone::~UserLoginPhone()
 {
-    delete network;
+//    delete network;
 
     delete pushButton_back;     // 返回个人界面
     delete pushButton_help;  // 帮助按钮

@@ -15,7 +15,6 @@ Tools::Tools(ClientNetwork *network_, QWidget *parent) :
 
 Tools::~Tools()
 {
-    delete network;
     delete pushButton_to_mainWindow;
     delete pushButton_to_convertor;
 }

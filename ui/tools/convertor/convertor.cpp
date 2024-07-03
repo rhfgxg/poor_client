@@ -15,7 +15,6 @@ Convertor::Convertor(ClientNetwork *network_, QWidget *parent) :
 
 Convertor::~Convertor()
 {
-    delete network;
     delete pushButton_to_tools;
     delete pushButton_to_timestamp;
 }

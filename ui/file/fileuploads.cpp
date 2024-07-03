@@ -20,7 +20,6 @@ FileUploads::~FileUploads()
     delete pushButton_filePath;
     delete pushButton_uploads;
     delete lineEdit_filePath;
-    delete network;
 }
 
 // 返回主界面

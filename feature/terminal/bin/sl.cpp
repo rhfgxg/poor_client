@@ -1,7 +1,12 @@
 #include "sl.h"
 
-Sl::Sl(QPlainTextEdit *terminal, QObject *parent)
-    : QObject(parent), textEdit(terminal), position(0), verticalPosition(0), timer(new QTimer(this)) {
+Sl::Sl(QPlainTextEdit *terminal, QObject *parent) :
+    QObject(parent),
+    textEdit(terminal),
+    position(0),
+    verticalPosition(0),
+    timer(new QTimer(this))
+{
     train << "        ====        ________                ___________ "
           << "    _D _|  |_______/        \\__I_I_____===__|_________| "
           << "     |(_)---  |   H\\________/ |   |        =|___ ___|   "
@@ -16,7 +21,8 @@ Sl::Sl(QPlainTextEdit *terminal, QObject *parent)
     connect(timer, &QTimer::timeout, this, &Sl::updateTrainPosition);
 }
 
-void Sl::start() {
+void Sl::start()
+{
     // 保存原来的显示内容
     originalContent = textEdit->toPlainText();
     textEdit->clear();
@@ -26,12 +32,14 @@ void Sl::start() {
     int totalLines = textEdit->height() / textEdit->fontMetrics().height();
     verticalPosition = (totalLines - train.size()) / 2;
 
-    timer->start(100);  // 100ms 刷新一次
+    timer->start(30);  // 30ms 刷新一次
 }
 
-void Sl::updateTrainPosition() {
+void Sl::updateTrainPosition()
+{
     position--;
-    if (position < -train.at(0).size()) {  // 火车移动到最左边后停止显示
+    if (position < -train.at(0).size())
+    {  // 火车移动到最左边后停止显示
         timer->stop();
         textEdit->clear();
         textEdit->setPlainText(originalContent + "\nusername-windows > ");
@@ -39,17 +47,22 @@ void Sl::updateTrainPosition() {
         QTextCursor cursor = textEdit->textCursor();
         cursor.movePosition(QTextCursor::End, QTextCursor::MoveAnchor);
         textEdit->setTextCursor(cursor);
-    } else {
+    }
+    else
+    {
         displayTrain();
     }
 }
 
-void Sl::displayTrain() {
+void Sl::displayTrain()
+{
     QString output;
-    for (int i = 0; i < verticalPosition; ++i) {
+    for (int i = 0; i < verticalPosition; ++i)
+    {
         output += "\n";
     }
-    for (const QString &line : train) {
+    for (const QString &line : train)
+    {
         output += QString(position, ' ') + line + "\n";
     }
     textEdit->setPlainText(output);

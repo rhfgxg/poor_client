@@ -16,8 +16,6 @@ Terminal::Terminal(ClientNetwork *network_, QWidget *parent) :
 
 Terminal::~Terminal()
 {
-    delete network;
-
     delete plainTextEdit_terminal;
 }
 

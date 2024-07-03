@@ -21,8 +21,6 @@ TimestampUi::TimestampUi(ClientNetwork *network_, QWidget *parent) :
 
 TimestampUi::~TimestampUi()
 {
-    delete network;
-
     delete pushButton_to_convertor;   // 返回转换器界面
 
     delete label_title;    // 界面提示

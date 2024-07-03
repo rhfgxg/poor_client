@@ -16,7 +16,7 @@ UserUploadsManager::UserUploadsManager(ClientNetwork *network_, QObject *parent)
 
 UserUploadsManager::~UserUploadsManager()
 {
-    delete network;
+//    delete network;
 }
 
 // 上传文件
@@ -27,22 +27,21 @@ void UserUploadsManager::uploads(QString file_path)
 // 在服务器解析回文件
     // 读取文件
     QFile file(file_path);
-    if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "文件打开失败: " << file_path;
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "文件上传：文件打开失败: " << file_path;
         return;
     }
-    // 将文件转换为Base64编码的字符串
-    QString base64Data = {Base64().toBase64(file_path)};
-//    QByteArray fileData = file.readAll();
-//    QString base64Data = fileData.toBase64();
+    file.close();
 
-    // 创建JSON对象
-    QJsonObject jsonObj;
-    jsonObj["type"] = "UPLOADS";    // 数据类型为上传数据
-    jsonObj["filename"] = QFileInfo(file).fileName(); // 文件名
-    jsonObj["filedata"] = base64Data; // Base64编码的文件数据
+    QString base64Data = {Base64().toBase64(file_path)};    // 将文件转换为Base64编码的字符串
 
-    // 序列化JSON对象
+    QJsonObject jsonObj;    // 创建JSON对象
+    jsonObj["type"] = "UPLOADS";    // 数据包类型
+    jsonObj["filename"] = QFileInfo(file_path).fileName();   // 文件名
+    jsonObj["filedata"] = base64Data;   // Base64编码的文件数据
+
+    // 序列化JSON对象，转为二进制数据用于传输
     QJsonDocument jsonDoc(jsonObj);
     QByteArray jsonData = jsonDoc.toJson();
 
