@@ -5,6 +5,8 @@
 #include <QFile>
 #include <QThread>
 #include <QTimer>
+#include <QString>
+#include <QRegularExpression>
 
 PlainTextEdit::PlainTextEdit(ClientNetwork *network_, QWidget *parent) :
     QPlainTextEdit(parent),
@@ -30,7 +32,7 @@ void PlainTextEdit::keyPressEvent(QKeyEvent *event)
             Command new_command(network);   // 指令处理类
             new_command.command_log(command);    // 调用日志函数，传入指令
 
-            QStringList tokens = command.split(' ', Qt::SkipEmptyParts); // 将指令分隔成字符串列表
+            QStringList tokens = parseCommand(command); // 将指令分隔成参数列表
 
             QString command_first = tokens.takeFirst(); // 取出第一个元素作为指令，剩余元素为参数
         // 需要修改窗口的指令：退出终端，窗口大小等
@@ -141,4 +143,45 @@ void PlainTextEdit::keyPressEvent(QKeyEvent *event)
     // 回车：Qt::Key_Return、Qt::Key_Enter
     // Tab：Qt::Key_Tab
     // 上下键：Qt::Key_Up、Qt::Key_Down
+}
+
+
+// 自定义的字符串解析函数
+QStringList PlainTextEdit::parseCommand(const QString& command)
+{
+    QStringList tokens;
+    bool inQuotes = false;
+    QString token;
+    for (int i = 0; i < command.length(); ++i)
+    {
+        QChar c = command[i];
+        if (c == '"')
+        {
+            inQuotes = !inQuotes; // 切换引号内外状态
+            if (!inQuotes)
+            {
+                // 完成一个带引号的参数
+                tokens.append(token);
+                token.clear();
+            }
+        }
+        else if (c == ' ' && !inQuotes)
+        {
+            if (!token.isEmpty())
+            {
+                // 完成一个不带引号的参数
+                tokens.append(token);
+                token.clear();
+            }
+        }
+        else
+        {
+            token += c; // 添加字符到当前参数
+        }
+    }
+    if (!token.isEmpty())
+    {
+        tokens.append(token); // 添加最后一个参数
+    }
+    return tokens;
 }

@@ -16,7 +16,8 @@ TimestampUi::TimestampUi(ClientNetwork *network_, QWidget *parent) :
 
     layout();   // 界面格式初始化
     connect(pushButton_to_convertor, &QPushButton::clicked, this, &TimestampUi::on_pushButton_to_convertor_clicked);
-
+    connect(pushButton_timestampToTime_execute, &QPushButton::clicked, this, &TimestampUi::on_pushButton_timestampToTime_execute_clicked);
+    connect(pushButton_timeToTimestamp_execute, &QPushButton::clicked, this, &TimestampUi::on_pushButton_timeToTimestamp_execute_clicked);
 }
 
 TimestampUi::~TimestampUi()
@@ -60,17 +61,8 @@ void TimestampUi::on_pushButton_timestampToTime_execute_clicked()  // 时间戳�
         return;
     }
 
-    // 将字符串转换为 时间戳
-    // 参数：时间字符串QString，时间格式
-    bool conversionOk = false;  // 转换是否成功
-    qint64 timestamp_value = value.toLongLong(&conversionOk);
-    if (!conversionOk)
-    {
-        qDebug() << "转换失败，字符串不能转换为有效的qint64数值";
-    }
-
-    QDateTime timestamp_result = timestamp.timestamp_to_time(timestamp_value, this->comboBox_timestampToTime_value_type->currentText(), this->comboBox_timestampToTime_result_type->currentText());
-    this->lineEdit_timestampToTime_result->setText(timestamp_result.toString("yyyy-MM-dd HH:mm:ss.zzz"));   // 转换成字符串显示
+    QString timestamp_result = timestamp.timestamp_to_time(value, this->comboBox_timestampToTime_value_type->currentText(), this->comboBox_timestampToTime_result_type->currentText());
+    this->lineEdit_timestampToTime_result->setText(timestamp_result);   // 转换成字符串显示
 }
 
 void TimestampUi::on_pushButton_timeToTimestamp_execute_clicked() // 时间转时间戳
@@ -82,18 +74,10 @@ void TimestampUi::on_pushButton_timeToTimestamp_execute_clicked() // 时间转�
         return;
     }
 
-    // 将字符串转换为 QDateTime 对象
-    // 参数：时间字符串QString，时间格式
-    QDateTime time_value = QDateTime::fromString(value, "yyyy-MM-dd HH:mm:ss.zzz");
-
     // 将 QDateTime 对象转换为 Unix 时间戳
-    qint64 timestamp_result = timestamp.time_to_timestamp(time_value, this->comboBox_timeToTimestamp_value_type->currentText(), this->comboBox_timeToTimestamp_result_type->currentText());
-    this->lineEdit_timeToTimestamp_result->setText(QString::number(timestamp_result));   // 转换成字符串显示
+    QString timestamp_result = timestamp.time_to_timestamp(value, this->comboBox_timeToTimestamp_value_type->currentText(), this->comboBox_timeToTimestamp_result_type->currentText());
 
-    if (this->comboBox_timeToTimestamp_result_type->currentText() != "秒(s)" && this->comboBox_timeToTimestamp_result_type->currentText() != "毫秒(ms)")
-    {
-        qDebug("时间转时间戳 结果类型异常");
-    }
+    this->lineEdit_timeToTimestamp_result->setText(timestamp_result);   // 结果显示
 }
 
 

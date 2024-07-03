@@ -20,6 +20,8 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;  // 处理键盘事件
 
 private:
+    QStringList parseCommand(const QString& command);   // 字符串处理函数，处理指令
+
     QString prompt;
     ClientNetwork *network; // 服务器通讯套接字
 

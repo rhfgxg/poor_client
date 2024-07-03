@@ -11,13 +11,13 @@ public:
     Timestamp();
     // 时间转时间戳, 默认使用 上海时间 转 毫秒
     // 参数：QString需要转换的时间，QString传入时间的类型，QString转换后结果的类型
-    qint64 time_to_timestamp(QDateTime time_value, QString currentText_value = "Asia/Shanghai", QString currentText_result = "毫秒(ms)");
-    QString time_to_timestamp(QString time_value, QString currentText_value = "Asia/Shanghai", QString currentText_result = "毫秒(ms)");
+//    qint64 time_to_timestamp(QDateTime time_value, QString currentText_value = "Asia/Shanghai", QString currentText_result = "毫秒(ms)");
+    QString time_to_timestamp(QString time_value, QString time_zone = "Asia/Shanghai", QString timestamp_format = "毫秒(ms)");
 
     // 时间戳转时间, 默认使用 毫秒 转 上海时间
     // 参数：QString需要转换的时间戳，QString传入时间戳的类型，QString转换后结果的类型
-    QDateTime timestamp_to_time(qint64 timestamp_value, QString currentText_value = "毫秒(ms)", QString currentText_result = "Asia/Shanghai");
-    QString timestamp_to_time(QString timestamp_value, QString currentText_value = "毫秒(ms)", QString currentText_result = "Asia/Shanghai");
+//    QDateTime timestamp_to_time(qint64 timestamp_value, QString currentText_value = "毫秒(ms)", QString currentText_result = "Asia/Shanghai");
+    QString timestamp_to_time(QString timestamp_value, QString timestamp_format = "毫秒(ms)", QString time_zone = "Asia/Shanghai");
 
 };
 

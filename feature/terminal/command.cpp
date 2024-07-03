@@ -70,43 +70,65 @@ const QString Command::command_execute(const QString& command_first, const QStri
 // 时间戳转换
     else if (command_first == "timestamp")
     {
-        // 参数列表（时间默认上海，时间戳默认毫秒）
-        // 0 转换形式
-        // 1 需要转换的值
-        // 2 值的类型
-        // 3 结果的类型
-        Timestamp timestamp;
+        Timestamp timestamp;    // 时间戳转换指令 执行类
 
         if (tokens.isEmpty())    // 参数链表为空
         {
-            result = "参数不足，参考：timestamp --timestamp_to_time 需要转换的时间戳 时间戳类型（默认毫秒） 转换后时间的时区（默认上海）";
+            result = "选项不足，目前选项有--time_to_timestamp、--timestamp_to_time，详情请参考手册";
         }
-        else if (*tokens.begin() == "--timestamp_to_time")
+        // 时间戳转时间
+        else if (tokens.at(0) == "--timestamp_to_time")
         {
-            if ((tokens.begin()+1) == tokens.end())    // 第二个参数指向尾部表示参数不足
+            if (tokens.size() < 2)    // 第二个参数：需要转换的时间戳
             {
-                result = "参数不足，参考：timestamp --timestamp_to_time 需要转换的时间戳 时间戳类型（默认毫秒） 转换后时间的时区（默认上海）";
+                result = "参数不足，请输入一个时间戳，详情请参考手册";
             }
-            QString time = timestamp.timestamp_to_time(*(tokens.begin()+1));   // 第二个元素：需要转换的时间戳
-            result = "传入的时间戳：" + *(tokens.begin()+1) + "，转换后的时间：" + time;
+            else
+            {
+                QString time = timestamp.timestamp_to_time(tokens.at(1));   // 第三个元素：需要转换的时间戳
+                result = "传入的时间戳：" + tokens.at(1) + "，转换后的时间：" + time;
+            }
         }
-        else if (*tokens.begin() == "--time_to_timestamp")
+        // 时间转时间戳
+        else if (tokens.at(0) == "--time_to_timestamp")
         {
-            if ((tokens.begin()+1) == tokens.end())    // 第二个参数指向尾部表示参数不足
+            if (tokens.size() < 2)    // 第二个参数：目标单位：ms，s
             {
-                result = "参数不足，参考：timestamp --time_to_timestamp 需要转换的时间 时间时区（默认上海） 转换后时间类型（默认毫秒）";
+                result = "选项不足，目前选项有--ms、--s";
             }
-            QString time = timestamp.time_to_timestamp(*(tokens.begin()+1));   // 第二个元素：需要转换的时间戳
-            result = "传入的时间：" + *(tokens.begin()+1) + "，转换后的时间戳：" + time;
+            else if(tokens.at(1) == "--ms")
+            {
+                if (tokens.size() < 3)    // 第三四个元素：需要转换的时间
+                {
+                    result = "参数不足，请输入一个时间：yyyy-MM-dd HH:mm:ss.zzz";
+                }
+                else
+                {
+                    QString time = timestamp.time_to_timestamp(tokens.at(2), "Asia/Shanghai", "毫秒(ms)");   // 第四个元素：需要转换的时间戳
+                    result = "传入的时间：" + tokens.at(2) + "，转换后的时间戳：" + time;
+                }
+            }
+            else if(tokens.at(1) == "--s")
+            {
+                if (tokens.size() < 3)    // 第三个元素：需要转换的时间
+                {
+                    result = "参数不足，请输入一个时间：yyyy-MM-dd HH:mm:ss.zzz";
+                }
+                else
+                {
+                    QString time = timestamp.time_to_timestamp(tokens.at(2), "Asia/Shanghai", "秒(s)");   // 第四个元素：需要转换的时间戳
+                    result = "传入的时间：" + tokens.at(2) + "，转换后的时间戳：" + time;
+                }
+            }
         }
         else
         {
-            result = "参数1错误";
+            result = "无法识别选项，目前选项有--time_to_timestamp、--timestamp_to_time，详情请参考手册";
         }
 
 
     }
-// 功能介绍
+// 文件上传
     else if (command_first == "uploads")
     {
         // 参数列表
@@ -115,9 +137,9 @@ const QString Command::command_execute(const QString& command_first, const QStri
         {
             result = "参数不足，参考：uploads 需要上传的文件路径";
         }
-        else
+        else if (tokens.at(0) == "--uploads")
         {
-            QString file_path = *(tokens.begin());
+            QString file_path = tokens.at(0);
 
             UserUploadsManager uploads(network);    // 创建管理对象
             uploads.uploads(file_path);   // 上传文件
@@ -128,6 +150,8 @@ const QString Command::command_execute(const QString& command_first, const QStri
 // 功能实现
     else if (command_first == "指令")
     {
+        // 下标访问参数链表：tokens.at(0)
+        // tokens.size<2：元素小于两个
         result = "指令结果";
     }
 // 未标识指令
