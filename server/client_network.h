@@ -20,7 +20,7 @@ public:
 signals:
     // 使用信号传递发回的json数据给对应接口
     void loginResponse(const QJsonObject &request);     // 登录结果
-    void uploadsResponse(const QJsonObject &request);   // 文件上传结果
+    void uploadsInitResponse(const QJsonObject &request);   // 文件上传结果
 
 private slots:
     void onConnected(); // 如果链接成功

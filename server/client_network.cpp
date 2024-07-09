@@ -90,9 +90,9 @@ void ClientNetwork::sendMessage(const QByteArray &message)
 // 读取服务器响应数据
 void ClientNetwork::readData()
 {
+    qDebug("客户端收到消息");
     // 获取发回的数据
     // 然后检查结果类型，然后发送对应信号
-
     QByteArray data = tcpSocket->readAll();
     QJsonDocument requestDoc = QJsonDocument::fromJson(data);
     QJsonObject request = requestDoc.object();
@@ -102,6 +102,10 @@ void ClientNetwork::readData()
     if (type == "LOGIN")
     {
         emit loginResponse(request);   // 发射信号，并携带 response
+    }
+    else if (type == "INITIAL_UPLOAD_RESPONSE")
+    {
+        emit uploadsInitResponse(request);  // 将服务端发回的处理结果发回
     }
 
 

@@ -50,7 +50,6 @@ void UserManager::login(const QString &username, const QString &password)
 // 根据服务器发回的消息 message，处理登录结果
 void UserManager::handleLoginResponse(const QJsonObject &request)
 {
-    qDebug("客户端收到消息");
     QString status = request["status"].toString();
 
     if (status == "SUCCESS")
