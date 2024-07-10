@@ -142,8 +142,8 @@ const QString Command::command_execute(const QString& command_first, const QStri
             QString file_path = tokens.at(0);
 
             UserUploadsManager uploads(network);    // 创建管理对象
-            uploads.uploads(file_path);   // 上传文件
-            result = "上传成功";
+            uploads.sendInitialUploadRequest(file_path);   // 初始化上传文件任务
+            result = "开始上传";
         }
 
     }

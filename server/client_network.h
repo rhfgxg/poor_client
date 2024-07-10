@@ -15,7 +15,7 @@ public:
 
     void connectToServer(const QString &host, quint16 port);    // 链接服务器
     void sendMessage(const QByteArray &message);    // 发送数据
-    const QString returnClientId();   // 获取客户端标记
+    const QString clientId();   // 获取客户端标记
 
 signals:
     // 使用信号传递发回的json数据给对应接口

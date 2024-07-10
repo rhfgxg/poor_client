@@ -39,7 +39,7 @@ void UserManager::login(const QString &username, const QString &password)
     request["type"] = "LOGIN";
     request["username"] = username; // 用户名
     request["password"] = password; // 用户密码
-    request["client_id"] = network->returnClientId();   // 传递客户端id
+    request["client_id"] = network->clientId();   // 传递客户端id
 
     QJsonDocument messageDoc(request);
     QByteArray message = messageDoc.toJson();

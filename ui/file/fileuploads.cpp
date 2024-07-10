@@ -56,7 +56,7 @@ void FileUploads::on_pushButton_uploads_clicked()
     QString file_path = this->lineEdit_filePath->text();
 
     UserUploadsManager uploads(network);    // 创建管理对象
-    uploads.uploads(file_path);   // 上传文件
+    uploads.sendInitialUploadRequest(file_path);   // 创建上传文件任务
 }
 
 // 界面初始化

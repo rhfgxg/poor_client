@@ -22,7 +22,7 @@ ClientNetwork::~ClientNetwork()
     tcpSocket->close();
 }
 
-// 连接服务器
+// 链接服务器
 // 参数：地址，端口
 void ClientNetwork::connectToServer(const QString &host, quint16 port)
 {
@@ -107,8 +107,6 @@ void ClientNetwork::readData()
     {
         emit uploadsInitResponse(request);  // 将服务端发回的处理结果发回
     }
-
-
 }
 
 // 初始化客户端标记
@@ -155,7 +153,7 @@ void ClientNetwork::initClientId()
 }
 
 // 让外界获取client_id
-const QString ClientNetwork::returnClientId()
+const QString ClientNetwork::clientId()
 {
     return client_id;
 }
