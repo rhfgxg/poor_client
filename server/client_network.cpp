@@ -29,28 +29,28 @@ void ClientNetwork::connectToServer(const QString &host, quint16 port)
     // 连接到服务器
     tcpSocket->connectToHost(host, port);
 
-    // 连接成功后，通常会连接信号槽以响应连接成功或失败
+// 连接成功后，通常会连接信号槽以响应连接成功或失败
     connect(tcpSocket, &QTcpSocket::connected, this, &ClientNetwork::onConnected);
-    // 选择QAbstractSocket::errorOccurred信号的一个特定重载版本，该版本接受一个QAbstractSocket::SocketError作为参数。
-    // QAbstractSocket::errorOccurred信号在QAbstractSocket发生错误时发射，
-    // 它有多个重载形式，但使用QOverload可以帮助你精确地绑定到带有SocketError参数的版本
     connect(tcpSocket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::errorOccurred), this, &ClientNetwork::onError);
-
+    /* QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::errorOccurred)做信号
+     * 选择QAbstractSocket::errorOccurred信号的一个特定重载版本，该版本接受一个QAbstractSocket::SocketError作为参数。
+     * QAbstractSocket::errorOccurred信号在QAbstractSocket发生错误时发射，
+     * 它有多个重载形式，但使用QOverload可以帮助你精确地绑定到带有SocketError参数的版本
+     */
 }
 
 // 链接服务器成功
 void ClientNetwork::onConnected()
 {
     qDebug() << "成功连接到服务器";
-    // 使用json对象，打包和发送数据
+
     QJsonObject request;
     request["type"] = "CONNECT";
-    request["client_id"] = client_id;   // 传递客户端id
-
+    request["client_id"] = client_id;   // 传递客户端id，记录客户端链接日志
+    // 序列化数据，发给服务端
     QJsonDocument messageDoc(request);
     QByteArray message = messageDoc.toJson();
-
-    sendMessage(message);  // 发送消息
+    sendMessage(message);
 }
 
 // 链接服务器失败
@@ -70,9 +70,10 @@ void ClientNetwork::sendMessage(const QByteArray &message)
 
     // 写入数据到套接字, 然后发送
     qint64 bytesWritten = tcpSocket->write(message);
-
-    // write 将数据写入到内部缓冲区。依赖于 Qt 框架的自动缓冲和发送机制，异步操作
-    // flush 强制将内部缓冲区中的数据发送，同步操作，会阻塞线程，直到数据发送完毕
+    /* write和flush区别
+     * write 将数据写入到内部缓冲区。依赖于 Qt 框架的自动缓冲和发送机制，异步操作
+     * flush 强制将内部缓冲区中的数据发送，同步操作，会阻塞线程，直到数据发送完毕
+     */
 
     // 检查是否有数据实际被写入
     if(bytesWritten > 0)
@@ -99,20 +100,24 @@ void ClientNetwork::readData()
 
     QString type = request["type"].toString();  // 获取返回类型
 
-    if (type == "LOGIN")
+    // 根据服务器返回结果，发射对应信号，通知对象
+    if (type == "LOGIN")    // 登录结果
     {
-        emit loginResponse(request);   // 发射信号，并携带 response
+        emit loginResponse(request);
     }
-    else if (type == "INITIAL_UPLOAD_RESPONSE")
+    else if (type == "INITIAL_UPLOAD_RESPONSE") // 文件上传任务初始化结果
     {
-        emit uploadsInitResponse(request);  // 将服务端发回的处理结果发回
+        emit uploadsInitResponse(request);
     }
 }
 
 // 初始化客户端标记
 void ClientNetwork::initClientId()
 {
-    // 检测本地登录记录的逻辑
+/* 读取本地配置文件，文件记录生成的客户端uuid
+ * 假设uuid不会重复（理论上存在重复的可能）
+ * 重复概率太低，客户端id重复产生的损失也不足以为此浪费性能每次都检测一次id
+ */
     // 例如，读取一个文件或配置项
     QFile file("./data/terminal/.client_message.txt");
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
@@ -127,7 +132,7 @@ void ClientNetwork::initClientId()
     // 使用 "=" 分割字符串
     QStringList parts = line.split("=", Qt::SkipEmptyParts);
 
-    // 长度小于2或常量不等于client_id
+    // 长度小于2或常量不等于client_id，生成id
     if (parts.size() < 2 || parts[0] != "CLIENT_ID")
     {
         // 如果本地没有客户端标记

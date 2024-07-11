@@ -47,20 +47,21 @@ void UserUploadsManager::sendInitialUploadRequest(const QString& file_path)
     network->sendMessage(json_data); // 发送数据给服务器
 }
 
-// 参数：文件路径，偏移量（已发送文件大小）
-// 当偏移量为0，表示文件第一次发送
-// 传入偏移量时，表示已发送部分文件（断点续传功能）从偏移量区域开始切片并传输
-void UserUploadsManager::uploadFileInChunks(const QString& file_path, qint64 offset)
-{
+// 文件切片上传
+void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString& file_path, QString user_id, qint64 total_size, qint64 offset)
+{/* 参数：文件路径，偏移量（已发送文件大小）
+  * 当偏移量为0，表示文件第一次发送
+  * 传入偏移量时，表示已发送部分文件（断点续传功能）从偏移量区域开始切片并传输
+  */
     QFile file(file_path);  // 文件路径
     const qint64 chunkSize = 1024 * 1024; // 每个切片1MB
     QByteArray fileData;    // 文件数据
-    qint64 bytes_sent = offset;  // 已发送字节
 
-    QJsonObject request;
+    QJsonObject request;    // 上传的数据
     request["type"] = "UPLOAD_CHUNK";
-    request["file_id"] = current_file_id; // 文件id
-    request["totalSize"] = file.size();   // 文件总大小
+    request["file_id"] = file_id; // 文件id
+    request["user_id"] = user_id; // 用户id
+    request["total_size"] = total_size; // 用户id
 
     if (!file.open(QIODevice::ReadOnly))
     {
@@ -68,29 +69,28 @@ void UserUploadsManager::uploadFileInChunks(const QString& file_path, qint64 off
         return;
     }
 
-    // 将文件指针定位到偏移量
+    // 将文件指针定位到偏移量，从此位置开始切片，默认为0,从开始位置切片
     if (!file.seek(offset))
     {
         qDebug() << "文件上传：文件定位失败: " << file_path;
         return;
     }
 
-    while (!file.atEnd())   // 循环直到文件末尾
+    while (!file.atEnd())   // 循环直到文件末尾，每次发送一个文件块
     {
         // todo：防止上传时源文件被修改
 
         fileData = file.read(chunkSize);    // 每次读取一片的大小，保存在fileData
         QString base64Data = Base64().toBase64(fileData);  // 转 base64编码
-        // 更新json数据包
         request["filedata"] = base64Data;   // 切片后文件块
         request["offset"] = offset; // 已发送文件大小
 
-        // 序列化数据
+        // 序列化数据，发送数据给服务器
         QJsonDocument json_doc(request);
         QByteArray json_data = json_doc.toJson();
-        network->sendMessage(json_data); // 发送数据给服务器
+        network->sendMessage(json_data);
 
-        bytes_sent += fileData.size();   // 更新已发送的字节数 bytesSent，加上当前读取的数据块大小。
+        offset += fileData.size();   // 更新已发送的字节数 bytesSent，加上当前读取的数据块大小。
     }
 
     file.close();
@@ -101,11 +101,17 @@ void UserUploadsManager::onReadyRead(const QJsonObject &request)
 {
     QString status = request["status"].toString();
 
-    if (status == "ok")
+    if (status == "SUCCESS")
     {
-        current_file_id = request["file_id"].toString();
-        qDebug() << "初始上传请求成功，文件ID：" << current_file_id;
-        uploadFileInChunks(request["file_path"].toString());   // 初始化成功：开始执行上传任务
+        QString file_id  = request["file_id"].toString();    // 文件ID
+        QString file_path = request["file_path"].toString();// 文件路径
+        QString user_id = request["user_id"].toString();    // 用户ID
+        qint64 total_size = request["total_size"].toInt();    // 文件总大小
+
+        qDebug() << "初始上传请求成功，文件ID：" << file_id;
+
+        uploadFileInChunks(file_id, file_path, user_id, total_size);   // 初始化成功：开始执行上传任务
+
         // todo：将任务加入任务列表（配置文件）
     }
     else
