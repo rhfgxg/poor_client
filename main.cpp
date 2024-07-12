@@ -6,21 +6,20 @@
 #include <QFile>    // 创建文件
 #include <QDir> // 创建文件夹
 
-void openClient(ClientNetwork *network);  // 打开客户端
+void openClient(ClientNetwork *network);  // 打开窗口
 void fileOk();  // 检查需要的本地文件是否被创建
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    // 程序启动检查
+    // 检查本地文件完整性
     fileOk();
-
     // 链接服务器
     ClientNetwork *network = new ClientNetwork();
     network->connectToServer("127.0.0.1", 1234);
 
-    // 打开客户端
+    // 打开窗口
     openClient(network);
 
     return a.exec();
@@ -31,12 +30,12 @@ void openClient(ClientNetwork *network)
 {
     // 检测本地登录记录的逻辑
     // 例如，读取一个文件或配置项
-//    if (!QFile::exists("login_record.txt"))
-//    {// 如果本地没有登录记录，进行登录活动
-//        UserLoginPhone *w = new UserLoginPhone(network);
-//        w->show();
-//    }
-//    else
+    if (!QFile::exists("login_record.txt"))
+    {// 如果本地没有登录记录，进行登录活动
+        UserLoginPhone *w = new UserLoginPhone(network);
+        w->show();
+    }
+    else
     {
         // 进入软件
         MainWindow *w = new MainWindow(network);
