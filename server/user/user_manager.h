@@ -13,7 +13,7 @@ public:
     explicit UserManager(ClientNetwork *network_, QObject *parent = nullptr);   // 参数：服务器通信管理对象
     ~UserManager();
 
-    void login(const QString &username, const QString &password);   // 向服务器发送登录信息，参数：用户名、密码
+    void login(const QString &account, const QString &password);   // 向服务器发送登录信息，参数：用户名、密码
 
 signals:
     void loginSuccess();    // 登录成功信号

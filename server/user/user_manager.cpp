@@ -2,6 +2,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QNetworkInterface>
+#include "../../feature/tools/encipher/md5.h"   // md5加密
 
 UserManager::UserManager(ClientNetwork *network_, QObject *parent) :
     QObject(parent),
@@ -17,8 +18,9 @@ UserManager::~UserManager()
 }
 
 // 账号登录按钮调用此函数，传入账号和密码
-void UserManager::login(const QString &username, const QString &password)
+void UserManager::login(const QString &account, const QString &password)
 {
+/*
     QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
     foreach (const QNetworkInterface &interface, interfaces)
     {
@@ -33,11 +35,16 @@ void UserManager::login(const QString &username, const QString &password)
     }
 
 //    qDebug() << "系统版本:" << QSysInfo::prettyProductName();
+*/
+
+    // 密码加密
+    QString password_md5 = Md5().md5_encipher(password);
 
     // 使用json对象，打包和发送数据
     QJsonObject request;
     request["type"] = "LOGIN";
-    request["username"] = username; // 用户名
+    request["account"] = account; // 账号
+//    request["password"] = password_md5; // 用户密码
     request["password"] = password; // 用户密码
     request["client_id"] = network->clientId();   // 传递客户端id
 

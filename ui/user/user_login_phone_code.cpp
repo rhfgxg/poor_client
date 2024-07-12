@@ -32,8 +32,61 @@ UserLoginPhoneCode::~UserLoginPhoneCode()
     delete lineEdit_code;  // 验证码输入框
 }
 
+// 槽函数
+void UserLoginPhoneCode::on_pushButton_back_clicked()    // 返回上一级
+{
+    this->close();
+    UserLoginPhone* w = new UserLoginPhone(network);
+    w->show();
+}
+
+void UserLoginPhoneCode::on_pushButton_help_clicked()    // 帮助
+{
+    // 与手机号登录界面相同
+    // 底部弹出悬浮窗两个按钮：
+    // 手机号不可用，绑定新手机：跳转到账号申述
+    // 其他常见账号问题：跳转到答疑界面
+}
+
+void UserLoginPhoneCode::on_pushButton_send_code_clicked()   // 重新发送验证码
+{
+    // 重新发送验证码请求
+}
+
+void UserLoginPhoneCode::on_pushButton_voice_code_clicked()  // 使用语音验证码
+{
+    // 使用电话发送验证码
+    // 弹窗提示注意接听电话
+}
 
 // 自定义私有函数
+void UserLoginPhoneCode::label_send_code_again_time()       // 再次发送验证码的倒计时
+{
+    // 每次发送验证码都需要重新倒计时，所以单独列出一个函数
+    // 创建一个提示标签
+    QLabel *label_send_code_again_time = new QLabel("60秒后重新发送验证码", this);
+    label_send_code_again_time->show();
+    // 创建定时器，每次超时都触发connect
+    QTimer* timer_label = new QTimer(this);
+    timer_label->start(1000); // 延迟1秒
+
+    int counter = 60;
+    QObject::connect(timer_label, &QTimer::timeout, this,
+                        [&counter, label_send_code_again_time, timer_label] ()mutable    // lambda表达式，捕获到定时器超时信号后，显示两个控件
+                        {
+                            if (counter == 0)   // 如果倒计时为0，结束计时器，关闭倒计时显示
+                            {
+                                timer_label->stop();
+                                label_send_code_again_time->close();
+                            }
+                            else
+                            {
+                                label_send_code_again_time->setText(QString::number(--counter) + "秒后重新发送验证码");
+                            }
+                        }
+                    );    // 在定时器超时后显示标签
+}
+
 void UserLoginPhoneCode::layout()    // 界面格式初始化
 {
     QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
@@ -78,59 +131,3 @@ void UserLoginPhoneCode::layout()    // 界面格式初始化
                      }
                      );    // 在定时器超时后显示标签
 }
-
-void UserLoginPhoneCode::label_send_code_again_time()       // 再次发送验证码的倒计时
-{
-    // 每次发送验证码都需要重新倒计时，所以单独列出一个函数
-    // 创建一个提示标签
-    QLabel *label_send_code_again_time = new QLabel("60秒后重新发送验证码", this);
-    label_send_code_again_time->show();
-    // 创建定时器，每次超时都触发connect
-    QTimer* timer_label = new QTimer(this);
-    timer_label->start(1000); // 延迟1秒
-
-    int counter = 60;
-    QObject::connect(timer_label, &QTimer::timeout, this,
-                        [&counter, label_send_code_again_time, timer_label] ()mutable    // lambda表达式，捕获到定时器超时信号后，显示两个控件
-                        {
-                            if (counter == 0)   // 如果倒计时为0，结束计时器，关闭倒计时显示
-                            {
-                                timer_label->stop();
-                                label_send_code_again_time->close();
-                            }
-                            else
-                            {
-                                label_send_code_again_time->setText(QString::number(--counter) + "秒后重新发送验证码");
-                            }
-                        }
-                    );    // 在定时器超时后显示标签
-}
-
-
-// 槽函数
-void UserLoginPhoneCode::on_pushButton_back_clicked()    // 返回上一级
-{
-    this->close();
-    UserLoginPhone* w = new UserLoginPhone(network);
-    w->show();
-}
-
-void UserLoginPhoneCode::on_pushButton_help_clicked()    // 帮助
-{
-    // 与手机号登录界面相同
-    // 底部弹出悬浮窗两个按钮：
-    // 手机号不可用，绑定新手机：跳转到账号申述
-    // 其他常见账号问题：跳转到答疑界面
-}
-
-void UserLoginPhoneCode::on_pushButton_send_code_clicked()   // 重新发送验证码
-{
-    // 重新发送验证码请求
-}
-
-void UserLoginPhoneCode::on_pushButton_voice_code_clicked()  // 使用语音验证码
-{
-    // 使用电话发送验证码
-    // 弹窗提示注意接听电话
-}
-

@@ -23,8 +23,6 @@ UserLoginPhone::UserLoginPhone(ClientNetwork *network_, QWidget *parent) :
 
 UserLoginPhone::~UserLoginPhone()
 {
-//    delete network;
-
     delete pushButton_back;     // 返回个人界面
     delete pushButton_help;  // 帮助按钮
     delete pushButton_send_code; // 发送验证码界面
@@ -38,52 +36,6 @@ UserLoginPhone::~UserLoginPhone()
     delete lineEdit_phone; // 手机号输入框
     delete checkBox_protocol;  // 同意协议
 }
-
-
-// 自定义私有函数
-void UserLoginPhone::layout() // 界面格式初始化
-{
-    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
-        QHBoxLayout *hBpxLayout_help = new QHBoxLayout;
-            pushButton_back = new QPushButton("返回");     // 返回个人界面
-            pushButton_help = new QPushButton("帮助");  // 帮助按钮
-        hBpxLayout_help->addWidget(pushButton_back);
-        hBpxLayout_help->addWidget(pushButton_help);
-
-        label_tip = new QLabel("未注册手机号验证后自动登录"); // 提示
-
-        QHBoxLayout *hBpxLayout_phone = new QHBoxLayout;
-            label_phone = new QLabel("手机号");   // 提示输入手机号
-            lineEdit_phone = new QLineEdit; // 手机号输入框
-                lineEdit_phone->setPlaceholderText("请输入11位手机号");
-        hBpxLayout_phone->addWidget(label_phone);
-        hBpxLayout_phone->addWidget(lineEdit_phone);
-
-        QVBoxLayout *vBoxLayout_login = new QVBoxLayout;
-            pushButton_send_code = new QPushButton("发送验证码"); // 发送验证码界面
-            pushButton_login_account = new QPushButton("密码登录"); // 账号登陆界面
-        vBoxLayout_login->addWidget(pushButton_send_code);
-        vBoxLayout_login->addWidget(pushButton_login_account);
-
-        checkBox_protocol = new QCheckBox("我已阅读并同意《软件协议》《个人信息保护指引》");  // 同意协议
-
-        QHBoxLayout *hBpxLayout_wechat = new QHBoxLayout;
-            pushButton_wechat = new QPushButton("微信");    // 微信登录
-            pushButton_qq = new QPushButton("qq");    // qq登录
-        hBpxLayout_wechat->addWidget(pushButton_wechat);
-        hBpxLayout_wechat->addWidget(pushButton_qq);
-
-    vBoxLayout->addLayout(hBpxLayout_help);
-    vBoxLayout->addWidget(label_tip);
-    vBoxLayout->addLayout(hBpxLayout_phone);
-    vBoxLayout->addLayout(vBoxLayout_login);
-    vBoxLayout->addWidget(checkBox_protocol);
-    vBoxLayout->addLayout(hBpxLayout_wechat);
-
-    // 手机号输入框提示字符
-
-}
-
 
 // 槽函数
 void UserLoginPhone::on_pushButton_back_clicked() // 按钮：返回上一级
@@ -221,3 +173,46 @@ void UserLoginPhone::on_pushButton_qq_clicked()   // 跳转qq登录
     }
 }
 
+// 自定义私有函数
+void UserLoginPhone::layout() // 界面格式初始化
+{
+    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
+        QHBoxLayout *hBpxLayout_help = new QHBoxLayout;
+            pushButton_back = new QPushButton("返回");     // 返回个人界面
+            pushButton_help = new QPushButton("帮助");  // 帮助按钮
+        hBpxLayout_help->addWidget(pushButton_back);
+        hBpxLayout_help->addWidget(pushButton_help);
+
+        label_tip = new QLabel("未注册手机号验证后自动登录"); // 提示
+
+        QHBoxLayout *hBpxLayout_phone = new QHBoxLayout;
+            label_phone = new QLabel("手机号");   // 提示输入手机号
+            lineEdit_phone = new QLineEdit; // 手机号输入框
+                lineEdit_phone->setPlaceholderText("请输入11位手机号");
+        hBpxLayout_phone->addWidget(label_phone);
+        hBpxLayout_phone->addWidget(lineEdit_phone);
+
+        QVBoxLayout *vBoxLayout_login = new QVBoxLayout;
+            pushButton_send_code = new QPushButton("发送验证码"); // 发送验证码界面
+            pushButton_login_account = new QPushButton("密码登录"); // 账号登陆界面
+        vBoxLayout_login->addWidget(pushButton_send_code);
+        vBoxLayout_login->addWidget(pushButton_login_account);
+
+        checkBox_protocol = new QCheckBox("我已阅读并同意《软件协议》《个人信息保护指引》");  // 同意协议
+
+        QHBoxLayout *hBpxLayout_wechat = new QHBoxLayout;
+            pushButton_wechat = new QPushButton("微信");    // 微信登录
+            pushButton_qq = new QPushButton("qq");    // qq登录
+        hBpxLayout_wechat->addWidget(pushButton_wechat);
+        hBpxLayout_wechat->addWidget(pushButton_qq);
+
+    vBoxLayout->addLayout(hBpxLayout_help);
+    vBoxLayout->addWidget(label_tip);
+    vBoxLayout->addLayout(hBpxLayout_phone);
+    vBoxLayout->addLayout(vBoxLayout_login);
+    vBoxLayout->addWidget(checkBox_protocol);
+    vBoxLayout->addLayout(hBpxLayout_wechat);
+
+    // 手机号输入框提示字符
+
+}

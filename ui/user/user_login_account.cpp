@@ -56,66 +56,7 @@ UserLoginAccount::~UserLoginAccount()
     delete checkBox_protocol;   // 同意协议
 }
 
-
-// 自定义私有函数
-void UserLoginAccount::layout()   // 界面格式初始化
-{
-    setWindowTitle("账号密码登录");
-
-    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
-
-        QHBoxLayout *hBpxLayout_help = new QHBoxLayout;
-            pushButton_back = new QPushButton("返回");   // 返回个人界面
-            pushButton_help = new QPushButton("帮助");   // 帮助
-        hBpxLayout_help->addWidget(pushButton_back);
-        hBpxLayout_help->addWidget(pushButton_help);
-
-        QVBoxLayout *vBoxLayout_line = new QVBoxLayout;
-            lineEdit_account = new QLineEdit;    // 账号输入框
-            QHBoxLayout *hBpxLayout_password = new QHBoxLayout;
-                lineEdit_password = new QLineEdit;   // 密码输入框
-                pushButton_look_password = new QPushButton("显示密码");  // 显示密码
-            hBpxLayout_password->addWidget(lineEdit_password);
-            hBpxLayout_password->addWidget(pushButton_look_password);
-        vBoxLayout_line->addWidget(lineEdit_account);
-        vBoxLayout_line->addLayout(hBpxLayout_password);
-
-        QVBoxLayout *vBoxLayout_login = new QVBoxLayout;
-            pushButton_login = new QPushButton("登录(不可点击)");  // 登录
-            pushButton_login_phone = new QPushButton("短信验证码登录");    // 验证码登录
-        vBoxLayout_login->addWidget(pushButton_login);
-        vBoxLayout_login->addWidget(pushButton_login_phone);
-
-        checkBox_protocol = new QCheckBox("我已阅读并同意《软件协议》《个人信息保护指引》");   // 同意协议
-
-        QHBoxLayout *hBpxLayout_wechat = new QHBoxLayout;
-            pushButton_wechat = new QPushButton("微信"); // 微信登录
-            pushButton_qq = new QPushButton("qq"); // qq登录
-        hBpxLayout_wechat->addWidget(pushButton_wechat);
-        hBpxLayout_wechat->addWidget(pushButton_qq);
-
-
-    vBoxLayout->addLayout(hBpxLayout_help);
-    vBoxLayout->addLayout(vBoxLayout_line);
-    vBoxLayout->addLayout(vBoxLayout_login);
-    vBoxLayout->addWidget(checkBox_protocol);
-    vBoxLayout->addLayout(hBpxLayout_wechat);
-
-
-    // 账号和密码输入框提示字符
-    this->lineEdit_account->setPlaceholderText("请输入手机号或邮箱");
-    this->lineEdit_password->setPlaceholderText("请输入密码");
-    // 限制密码输入框输入和显示内容
-    this->lineEdit_password->setEchoMode(QLineEdit::Password);    // 设置显示模式为密码
-    QRegularExpression regExp("[0-9a-zA-Z.@]{1,16}");   // 正则设置只能输入英文数字符号，长度：1-16位
-    this->lineEdit_password->setValidator(new QRegularExpressionValidator(regExp, this));
-
-    // 限制登录按钮：在账号和密码输入后才能点击
-    this->pushButton_login->setEnabled(false); // 初始时禁用登录按钮
-}
-
-
-// 自定义槽函数
+// 槽函数
 void UserLoginAccount::on_show_pushButton_login() // 显示登录按钮
 {
     if (!this->lineEdit_account->text().isEmpty() && !this->lineEdit_password->text().isEmpty())
@@ -149,7 +90,6 @@ void UserLoginAccount::on_login_response_failed(const QString &reason)    // 登
     yesButton->setText("好的");
 }
 
-// 槽函数
 void UserLoginAccount::on_pushButton_back_clicked()   // 按钮：返回上一级
 {
     this->close();
@@ -281,3 +221,59 @@ void UserLoginAccount::on_pushButton_qq_clicked() // 跳转qq登录
     }
 }
 
+// 自定义私有函数
+void UserLoginAccount::layout()   // 界面格式初始化
+{
+    setWindowTitle("账号密码登录");
+
+    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
+
+        QHBoxLayout *hBpxLayout_help = new QHBoxLayout;
+            pushButton_back = new QPushButton("返回");   // 返回个人界面
+            pushButton_help = new QPushButton("帮助");   // 帮助
+        hBpxLayout_help->addWidget(pushButton_back);
+        hBpxLayout_help->addWidget(pushButton_help);
+
+        QVBoxLayout *vBoxLayout_line = new QVBoxLayout;
+            lineEdit_account = new QLineEdit;    // 账号输入框
+            QHBoxLayout *hBpxLayout_password = new QHBoxLayout;
+                lineEdit_password = new QLineEdit;   // 密码输入框
+                pushButton_look_password = new QPushButton("显示密码");  // 显示密码
+            hBpxLayout_password->addWidget(lineEdit_password);
+            hBpxLayout_password->addWidget(pushButton_look_password);
+        vBoxLayout_line->addWidget(lineEdit_account);
+        vBoxLayout_line->addLayout(hBpxLayout_password);
+
+        QVBoxLayout *vBoxLayout_login = new QVBoxLayout;
+            pushButton_login = new QPushButton("登录(不可点击)");  // 登录
+            pushButton_login_phone = new QPushButton("短信验证码登录");    // 验证码登录
+        vBoxLayout_login->addWidget(pushButton_login);
+        vBoxLayout_login->addWidget(pushButton_login_phone);
+
+        checkBox_protocol = new QCheckBox("我已阅读并同意《软件协议》《个人信息保护指引》");   // 同意协议
+
+        QHBoxLayout *hBpxLayout_wechat = new QHBoxLayout;
+            pushButton_wechat = new QPushButton("微信"); // 微信登录
+            pushButton_qq = new QPushButton("qq"); // qq登录
+        hBpxLayout_wechat->addWidget(pushButton_wechat);
+        hBpxLayout_wechat->addWidget(pushButton_qq);
+
+
+    vBoxLayout->addLayout(hBpxLayout_help);
+    vBoxLayout->addLayout(vBoxLayout_line);
+    vBoxLayout->addLayout(vBoxLayout_login);
+    vBoxLayout->addWidget(checkBox_protocol);
+    vBoxLayout->addLayout(hBpxLayout_wechat);
+
+
+    // 账号和密码输入框提示字符
+    this->lineEdit_account->setPlaceholderText("请输入手机号或邮箱");
+    this->lineEdit_password->setPlaceholderText("请输入密码");
+    // 限制密码输入框输入和显示内容
+    this->lineEdit_password->setEchoMode(QLineEdit::Password);    // 设置显示模式为密码
+    QRegularExpression regExp("[0-9a-zA-Z.@]{1,16}");   // 正则设置只能输入英文数字符号，长度：1-16位
+    this->lineEdit_password->setValidator(new QRegularExpressionValidator(regExp, this));
+
+    // 限制登录按钮：在账号和密码输入后才能点击
+    this->pushButton_login->setEnabled(false); // 初始时禁用登录按钮
+}

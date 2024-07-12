@@ -8,10 +8,8 @@ Md5::Md5()
 
 QString Md5::md5_encipher(QString str) // md5加密
 {
-    QString result;
-    QByteArray MD5;
-    MD5 = QCryptographicHash::hash(str.toLatin1(),QCryptographicHash::Md5);
-    result.append(MD5.toHex());
+    QByteArray MD5 = QCryptographicHash::hash(str.toLatin1(),QCryptographicHash::Md5);  // 加密
+    QString result = MD5.toHex();   // 转为QString
 
     return result;
 }

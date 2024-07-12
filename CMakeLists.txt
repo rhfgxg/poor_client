@@ -29,6 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ui/user/user_login_account.h ui/user/user_login_account.cpp # 账号登录界面
         ui/user/user_login_phone.h ui/user/user_login_phone.cpp # 手机号登录界面
         ui/user/user_login_phone_code.h ui/user/user_login_phone_code.cpp   # 验证码输入界面
+#        ui/user/user_sign_in.h ui/user/user_sign_in.cpp # 用户登录界面
 
         ui/tools/tools.h ui/tools/tools.cpp # 工具集界面显示
             ui/tools/convertor/convertor.h ui/tools/convertor/convertor.cpp # 转换器界面显示
