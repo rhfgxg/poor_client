@@ -11,6 +11,7 @@
 #include <QTimer>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include "../../feature/tools/encipher/md5.h"   // md5加密
 
 // 账号密码登录
 UserLoginAccount::UserLoginAccount(ClientNetwork *network_, QWidget *parent) :
@@ -71,7 +72,7 @@ void UserLoginAccount::on_show_pushButton_login() // 显示登录按钮
     }
 }
 
-void UserLoginAccount::on_login_response_success() // 登录成功
+void UserLoginAccount::on_login_response_success(const QString &tooken) // 登录成功
 {
     // 登录成功，打开主界面
     this->close();
@@ -83,11 +84,18 @@ void UserLoginAccount::on_login_response_failed(const QString &reason)    // 登
 {
     QMessageBox* msgBox = new QMessageBox(this);
     msgBox->setWindowTitle("登录失败！");
-    msgBox->setText("登录失败，请检查输入的账号或密码是否正确。");
+    msgBox->setText("登录失败" + reason);
     msgBox->setIcon(QMessageBox::Information);
     // 添加弹窗内按钮
-    QPushButton *yesButton = msgBox->addButton(QMessageBox::Yes);   // 关闭提示
-    yesButton->setText("好的");
+    QPushButton *closeButton = msgBox->addButton(QMessageBox::Yes);   // 关闭提示
+    closeButton->setText("好的");
+    // 显示消息框并等待用户响应
+    msgBox->exec();
+    if (msgBox->clickedButton() == closeButton)
+    {
+        this->checkBox_protocol->setChecked(true);
+        msgBox->close(); // 关闭弹窗
+    }
 }
 
 void UserLoginAccount::on_pushButton_back_clicked()   // 按钮：返回上一级
@@ -139,7 +147,6 @@ void UserLoginAccount::on_pushButton_login_clicked()  // 登录按钮
         // 根据用户选择执行相应操作
         if (msgBox->clickedButton() == yesButton)
         {
-
             this->checkBox_protocol->setChecked(true);
             msgBox->close(); // 关闭弹窗
         }
@@ -152,7 +159,11 @@ void UserLoginAccount::on_pushButton_login_clicked()  // 登录按钮
     // 获取数据
     QString connect = this->lineEdit_account->text();
     QString password = this->lineEdit_password->text();
-    user_manager->login(connect, password);   // 调用登录管理的登录部分，向服务器发送信息
+
+    // 密码加密
+    QString password_hash = Md5().md5_encipher(password);
+
+    user_manager->user_login(connect, password_hash);   // 调用登录管理的登录部分，向服务器发送信息
 }
 
 void UserLoginAccount::on_pushButton_login_phone_clicked()    // 跳转短信验证码登录界面

@@ -25,7 +25,7 @@ private slots:
 // 自定义槽函数：
     void on_show_pushButton_login();    // 在账号和密码都输入内容后使登录按钮可以被点击
 
-    void on_login_response_success();    // 登录成功
+    void on_login_response_success(const QString &tooken);    // 登录成功
     void on_login_response_failed(const QString &reason);    // 登录失败
 
 // 槽函数

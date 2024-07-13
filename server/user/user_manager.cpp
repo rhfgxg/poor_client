@@ -2,7 +2,6 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QNetworkInterface>
-#include "../../feature/tools/encipher/md5.h"   // md5加密
 
 UserManager::UserManager(ClientNetwork *network_, QObject *parent) :
     QObject(parent),
@@ -17,35 +16,32 @@ UserManager::~UserManager()
     delete network;
 }
 
-// 账号登录按钮调用此函数，传入账号和密码
-void UserManager::login(const QString &account, const QString &password)
+// 账号注册调用此函数
+void UserManager::user_register(const QString &user_name, const QString &password_hash, const QString email, const QString phone_number)
 {
-/*
-    QList<QNetworkInterface> interfaces = QNetworkInterface::allInterfaces();
-    foreach (const QNetworkInterface &interface, interfaces)
-    {
-        QList<QNetworkAddressEntry> entries = interface.addressEntries();
-        foreach (const QNetworkAddressEntry &entry, entries)
-        {
-            if (entry.ip().protocol() == QAbstractSocket::IPv4Protocol)
-            {
-                qDebug() << "客户端IP:" << entry.ip().toString();
-            }
-        }
-    }
+    // 使用json对象，打包和发送数据
+    QJsonObject request;
+    request["type"] = "RESISTER";
+    request["user_name"] = user_name;   // 用户名
+    request["password_hash"] = password_hash; // 用户密码
+    request["email"] = email;   // 邮箱
+    request["phone_number"] = phone_number; // 手机号码
+    request["client_id"] = network->clientId();   // 传递客户端id
 
-//    qDebug() << "系统版本:" << QSysInfo::prettyProductName();
-*/
+    QJsonDocument messageDoc(request);
+    QByteArray message = messageDoc.toJson();
 
-    // 密码加密
-    QString password_md5 = Md5().md5_encipher(password);
+    network->sendMessage(message);  // 使用服务器通信类，发送消息
+}
 
+// 账号登录调用此函数
+void UserManager::user_login(const QString &account, const QString &password_hash)
+{
     // 使用json对象，打包和发送数据
     QJsonObject request;
     request["type"] = "LOGIN";
     request["account"] = account; // 账号
-//    request["password"] = password_md5; // 用户密码
-    request["password"] = password; // 用户密码
+    request["password_hash"] = password_hash; // 用户密码
     request["client_id"] = network->clientId();   // 传递客户端id
 
     QJsonDocument messageDoc(request);
@@ -59,9 +55,13 @@ void UserManager::handleLoginResponse(const QJsonObject &request)
 {
     QString status = request["status"].toString();
 
+    qDebug() << request["status"].toString();
+
     if (status == "SUCCESS")
     {
-        emit loginSuccess();    // 发送登录成功信号，被账号登录类接收
+        QString tooken = request["tooken"].toString();
+
+        emit loginSuccess(tooken);    // 发送登录成功信号，被账号登录类接收
     }
     else
     {
