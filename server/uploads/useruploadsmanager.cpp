@@ -34,11 +34,10 @@ void UserUploadsManager::sendInitialUploadRequest(const QString& file_path)
 //        qDebug() << "不允许的文件扩展名:" << fileExtension;
 //        return;
 //    }
-    qDebug() << file_format;
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        qDebug() << "文件上传：文件打开失败: " << file_path;
+        qDebug() << "文件上传任务初始化：文件打开失败: " << file_path;
         return;
     }
 
@@ -83,14 +82,13 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
         qDebug() << "文件上传：文件定位失败: " << file_path;
         return;
     }
-
     while (!file.atEnd())   // 循环直到文件末尾，每次发送一个文件块
     {
         // todo：防止上传时源文件被修改
-
         fileData = file.read(chunkSize);    // 每次读取一片的大小，保存在fileData
-        QString base64Data = Base64().toBase64(fileData);  // 转 base64编码
-        request["filedata"] = base64Data;   // 切片后文件块
+
+        QString base64_data = fileData.toBase64();  // 转 base64编码
+        request["filedata"] = base64_data;   // 切片后文件块
         request["offset"] = offset; // 已发送文件大小
 
         // 序列化数据，发送数据给服务器
@@ -100,7 +98,7 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
 
         offset += fileData.size();   // 更新已发送的字节数 bytesSent，加上当前读取的数据块大小。
     }
-
+    qDebug("已发送一片数据");
     file.close();
 }
 
@@ -114,7 +112,7 @@ void UserUploadsManager::onReadyRead(const QJsonObject &request)
         QString file_id  = request["file_id"].toString();    // 文件ID
         QString file_path = request["file_path"].toString();// 文件路径
 
-        qDebug() << "初始上传请求成功，文件ID：" << file_id;
+        qDebug() << "初始上传请求成功";
 
         uploadFileInChunks(file_id, file_path);   // 初始化成功：开始执行上传任务
 

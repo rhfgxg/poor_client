@@ -6,20 +6,25 @@
 FileUploads::FileUploads(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
     network(network_),
+    user_uploads_manager(new UserUploadsManager(network_, this))
 {
     layout();
+    // 返回主界面
     connect(pushButton_to_mainWindows, &QPushButton::clicked, this, &FileUploads::on_pushButton_to_mainWindows_clicked);
+    // 选择文件
     connect(pushButton_filePath, &QPushButton::clicked, this, &FileUploads::on_pushButton_filePath_clicked);
+    // 上传文件
     connect(pushButton_uploads, &QPushButton::clicked, this, &FileUploads::on_pushButton_uploads_clicked);
-
 }
 
 FileUploads::~FileUploads()
 {
-    delete pushButton_to_mainWindows;
-    delete pushButton_filePath;
-    delete pushButton_uploads;
-    delete lineEdit_filePath;
+    delete user_uploads_manager;    // 文件上传管理
+
+    delete pushButton_to_mainWindows;   // 返回按钮
+    delete pushButton_filePath; // 选择文件按钮
+    delete pushButton_uploads;  // 上传按钮
+    delete lineEdit_filePath;   // 输入框
 }
 
 // 返回主界面
@@ -44,10 +49,8 @@ void FileUploads::on_pushButton_filePath_clicked()
     {
         this->lineEdit_filePath->setText(file_path);
     }
-    else
-    {
-        return;
-    }
+
+    return;
 }
 
 // 上传
@@ -55,8 +58,7 @@ void FileUploads::on_pushButton_uploads_clicked()
 {
     QString file_path = this->lineEdit_filePath->text();
 
-    UserUploadsManager uploads(network);    // 创建管理对象
-    uploads.sendInitialUploadRequest(file_path);   // 创建上传文件任务
+    user_uploads_manager->sendInitialUploadRequest(file_path);   // 创建上传文件任务
 }
 
 // 界面初始化

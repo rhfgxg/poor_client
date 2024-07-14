@@ -23,7 +23,7 @@ public:
     void uploadFileInChunks(const QString file_id, const QString& file_path, qint64 offset = 0);
 
 private slots:
-    void onReadyRead(const QJsonObject &request); // 服务端返回信息：第一次上传时返回文件ID
+    void onReadyRead(const QJsonObject &request); // 处理返回信息，调用 uploadFileInChunks函数 返回信息：第一次上传时返回文件ID
 
 private:
     ClientNetwork *network;    // 服务器通信套接字，用于接受信号

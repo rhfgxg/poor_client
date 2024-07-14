@@ -28,7 +28,7 @@ private slots:
     void on_login_response_success(const QString &tooken);    // 登录成功
     void on_login_response_failed(const QString &reason);    // 登录失败
 
-// 槽函数
+// 控件槽函数
     void on_pushButton_back_clicked();  // 返回上一级
 
     void on_pushButton_help_clicked();  // 帮助

@@ -40,7 +40,7 @@ UserLoginAccount::UserLoginAccount(ClientNetwork *network_, QWidget *parent) :
 
 UserLoginAccount::~UserLoginAccount()
 {
-    delete user_manager;
+    delete user_manager;    // 用户管理类
 
     delete pushButton_back;   // 返回个人界面
     delete pushButton_help;   // 帮助
