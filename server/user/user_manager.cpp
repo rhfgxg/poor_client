@@ -55,12 +55,9 @@ void UserManager::handleLoginResponse(const QJsonObject &request)
 {
     QString status = request["status"].toString();
 
-    qDebug() << request["status"].toString();
-
     if (status == "SUCCESS")
     {
         QString tooken = request["tooken"].toString();
-
         emit loginSuccess(tooken);    // 发送登录成功信号，被账号登录类接收
     }
     else

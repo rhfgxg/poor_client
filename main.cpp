@@ -30,12 +30,12 @@ void openClient(ClientNetwork *network)
 {
     // 检测本地登录记录的逻辑
     // 例如，读取一个文件或配置项
-    if (!QFile::exists("login_record.txt"))
-    {// 如果本地没有登录记录，进行登录活动
-        UserLoginPhone *w = new UserLoginPhone(network);
-        w->show();
-    }
-    else
+//    if (!QFile::exists("login_record.txt"))
+//    {// 如果本地没有登录记录，进行登录活动
+//        UserLoginPhone *w = new UserLoginPhone(network);
+//        w->show();
+//    }
+//    else
     {
         // 进入软件
         MainWindow *w = new MainWindow(network);
