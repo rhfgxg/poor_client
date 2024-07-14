@@ -2,6 +2,7 @@
 #define FILEUPLOADS_H
 
 #include "../../server/client_network.h"    // 传递套接字
+//#include "../../server/uploads/useruploadsmanager.h"    // 文件上传管理
 #include <QWidget>
 #include <QPushButton>
 #include <QLineEdit>
@@ -28,6 +29,7 @@ private slots:
 private:
     void layout();  // 界面初始化
     ClientNetwork *network; // 服务器通讯套接字
+//    UserUploadsManager *user_uploads_manager;   // 文件上传管理
 
     QPushButton *pushButton_to_mainWindows; // 返回主界面
     QPushButton *pushButton_filePath;   // 选择文件，添加文件路径

@@ -6,8 +6,8 @@
 #include "../../feature/tools/encipher/base64.h"
 
 UserUploadsManager::UserUploadsManager(ClientNetwork *network_, QObject *parent)  :
-    network(network_),
-    QObject(parent)
+    QObject(parent),
+    network(network_)
 {
     // loginResponse：服务器通讯类的信号，在接收到服务器消息时发出，携带了收到的消息
     connect(network, &ClientNetwork::uploadsInitResponse, this, &UserUploadsManager::onReadyRead);

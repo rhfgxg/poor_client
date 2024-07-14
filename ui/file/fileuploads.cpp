@@ -5,7 +5,7 @@
 #include <QVBoxLayout>
 FileUploads::FileUploads(ClientNetwork *network_, QWidget *parent) :
     QWidget(parent),
-    network(network_)
+    network(network_),
 {
     layout();
     connect(pushButton_to_mainWindows, &QPushButton::clicked, this, &FileUploads::on_pushButton_to_mainWindows_clicked);

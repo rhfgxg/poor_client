@@ -48,7 +48,7 @@ private:
 
 private:
     UserManager *user_manager; // 创建一个用户管理对象，方便接收来自他的信号
-    ClientNetwork *network;
+    ClientNetwork *network; // 服务端套接字
 
     QPushButton *pushButton_back;   // 返回号码登陆
     QPushButton *pushButton_help;   // 帮助

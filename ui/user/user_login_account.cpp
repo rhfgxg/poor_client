@@ -38,7 +38,6 @@ UserLoginAccount::UserLoginAccount(ClientNetwork *network_, QWidget *parent) :
     connect(pushButton_qq, &QPushButton::clicked, this, &UserLoginAccount::on_pushButton_qq_clicked);
 }
 
-
 UserLoginAccount::~UserLoginAccount()
 {
     delete user_manager;

@@ -76,15 +76,14 @@ void ClientNetwork::sendMessage(const QByteArray &message)
      */
 
     // 检查是否有数据实际被写入
-    if(bytesWritten > 0)
+    if(bytesWritten <= 0)
     {
-        qDebug() << "成功写入" << bytesWritten << "字节数据";
-//        tcpSocket->flush(); // 确保数据立即发送，立刻清空缓冲区，发送数据
+        qDebug() << "写入数据失败：" << tcpSocket->errorString();
     }
     else
     {
-        qDebug() << "写入数据失败：" << tcpSocket->errorString();
-
+//        qDebug() << "成功写入" << bytesWritten << "字节数据";
+//        tcpSocket->flush(); // 确保数据立即发送，立刻清空缓冲区，发送数据
     }
 }
 
@@ -105,7 +104,7 @@ void ClientNetwork::readData()
     {
         emit loginResponse(request);
     }
-    else if (type == "INITIAL_UPLOAD_RESPONSE") // 文件上传任务初始化结果
+    else if (type == "INITIAL_UPLOAD") // 文件上传任务初始化结果
     {
         emit uploadsInitResponse(request);
     }
