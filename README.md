@@ -2,7 +2,12 @@
 一个小工具集
 服务端源码：https://github.com/rhfgxg/poor_server
 
+环境和工具版本：
+client：windows11, 	MinGW
+server：ubuntu22.04.3lts, Qt6.3.2gcc编译套件, mysql8.0.37
+
 文件目录树：
+a.txt(4kb)和D.jpg(7mb)是用来进行测试的文件(文件上传时，切片的单位是1mb)
 .
 ├── CMakeLists.txt
 ├── CMakeLists.txt.user
@@ -96,7 +101,13 @@
 
 ### 实现云盘功能(已实现文件切片上传功能)
 将数据放在云端，学习网络文件传输，文件切片，压缩等
-文件切片上传：将文件按 每片1MB切片进行上传。
+文件切片上传：将文件按 每片60kb切片进行上传。
+	原本 gpt生成代码是 每片 1mb，但是上传时会在 解析json数据时报错：JSON数据解析失败: "unterminated string"（报错代码位置：服务端/server/server_network.cpp/onReadyRead函数）
+		发现这个报错是因为上传文件过大，出现解析错误
+	经过边际测试：我的电脑（服务器）比较稳定的单个文件块大小是60kb（在大量上传时，还是会异常，推测和电脑性能有关，请根据自己电脑使用不同大小文件进行边际测试）
+		定义切片大小常量的位置：
+			服务端/data/user_uploads/useruploads.cpp/handleInitialUploadRequest函数，常量名：chunk_size
+			客户端/server/uploads/uploadsmanager.cpp/uploadFileInChunks函数，常量名：chunk_size
 文件哈希校验：上传前计算文件的哈希值，上传完成后服务器再次计算并比较哈希值，确保文件未被篡改
 进度和状态提示
 

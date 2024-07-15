@@ -3,7 +3,8 @@
 #include <QFileInfo>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include "../../feature/tools/encipher/base64.h"
+#include <QTimer>
+#include <iostream>
 
 UserUploadsManager::UserUploadsManager(ClientNetwork *network_, QObject *parent)  :
     QObject(parent),
@@ -63,8 +64,8 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
   * 传入偏移量时，表示已发送部分文件（断点续传功能）从偏移量区域开始切片并传输
   */
     QFile file(file_path);  // 文件路径
-    const qint64 chunkSize = 1024 * 1024; // 每个切片1MB
-    QByteArray fileData;    // 文件数据
+    const qint64 chunk_size = 1024 * 30; // 每个切片30kb：经过测试，在目前，30kb可以保持一个稳定的传输质量，切片传输时不会出现json解析异常
+    QByteArray file_data;    // 文件数据
 
     QJsonObject request;    // 上传的数据
     request["type"] = "UPLOAD_CHUNK";
@@ -85,10 +86,10 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
     while (!file.atEnd())   // 循环直到文件末尾，每次发送一个文件块
     {
         // todo：防止上传时源文件被修改
-        fileData = file.read(chunkSize);    // 每次读取一片的大小，保存在fileData
+        file_data = file.read(chunk_size);    // 每次读取一片的大小，保存在fileData
+        QString base64_data = file_data.toBase64();  // 转 base64编码
 
-        QString base64_data = fileData.toBase64();  // 转 base64编码
-        request["filedata"] = base64_data;   // 切片后文件块
+        request["file_data"] = base64_data;   // 切片后文件块
         request["offset"] = offset; // 已发送文件大小
 
         // 序列化数据，发送数据给服务器
@@ -96,9 +97,8 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
         QByteArray json_data = json_doc.toJson();
         network->sendMessage(json_data);
 
-        offset += fileData.size();   // 更新已发送的字节数 bytesSent，加上当前读取的数据块大小。
+        offset += file_data.size();   // 更新已发送的字节数 bytesSent，加上当前读取的数据块大小。
     }
-    qDebug("已发送一片数据");
     file.close();
 }
 
