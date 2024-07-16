@@ -2,6 +2,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QNetworkInterface>
+#include "../../feature/data/packet.h"  // 自定义数据包
 
 UserManager::UserManager(ClientNetwork *network_, QObject *parent) :
     QObject(parent),
@@ -19,35 +20,32 @@ UserManager::~UserManager()
 // 账号注册调用此函数
 void UserManager::user_register(const QString &user_name, const QString &password_hash, const QString email, const QString phone_number)
 {
-    // 使用json对象，打包和发送数据
+    // json子数据包
     QJsonObject request;
-    request["type"] = "RESISTER";
     request["user_name"] = user_name;   // 用户名
     request["password_hash"] = password_hash; // 用户密码
     request["email"] = email;   // 邮箱
     request["phone_number"] = phone_number; // 手机号码
     request["client_id"] = network->clientId();   // 传递客户端id
 
-    QJsonDocument messageDoc(request);
-    QByteArray message = messageDoc.toJson();
+    // 打包进自定义数据包
+    Packet message(PacketType::RESISTER, request);
 
-    network->sendMessage(message);  // 使用服务器通信类，发送消息
+    network->sendMessage(message.toByteArray());  // 序列化后，由通信管理发送给服务端
 }
 
 // 账号登录调用此函数
 void UserManager::user_login(const QString &account, const QString &password_hash)
 {
-    // 使用json对象，打包和发送数据
+    // json子数据包
     QJsonObject request;
-    request["type"] = "LOGIN";
     request["account"] = account; // 账号
     request["password_hash"] = password_hash; // 用户密码
     request["client_id"] = network->clientId();   // 传递客户端id
 
-    QJsonDocument messageDoc(request);
-    QByteArray message = messageDoc.toJson();
-
-    network->sendMessage(message);  // 使用服务器通信类，发送消息
+    // 使用数据头和json数据包，打包进自定义数据包
+    Packet message(PacketType::LOGIN, request);
+    network->sendMessage(message.toByteArray());  // 序列化后，由通信管理发送给服务端
 }
 
 // 根据服务器发回的消息 message，处理登录结果

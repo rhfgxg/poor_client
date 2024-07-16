@@ -40,6 +40,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ui/terminal/terminal.h ui/terminal/terminal.cpp # 终端界面显示
 
 # 功能实现
+        feature/data/packet.h   feature/data/packet.cpp # 通信数据包
         feature/tools/convertor/timestamp/timestamp.h feature/tools/convertor/timestamp/timestamp.cpp   # 时间戳转换处理
         feature/tools/encipher/md5.h feature/tools/encipher/md5.cpp # md5加密处理
         feature/tools/encipher/base64.h feature/tools/encipher/base64.cpp   # base64转换处理

@@ -3,8 +3,7 @@
 #include <QFileInfo>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <QTimer>
-#include <iostream>
+#include "../../feature/data/packet.h"  // 自定义数据包
 
 UserUploadsManager::UserUploadsManager(ClientNetwork *network_, QObject *parent)  :
     QObject(parent),
@@ -42,8 +41,8 @@ void UserUploadsManager::sendInitialUploadRequest(const QString& file_path)
         return;
     }
 
+    // json子数据包
     QJsonObject request;
-    request["type"] = "INITIAL_UPLOAD"; // 第一次上传
     request["file_name"] = file_name;    // 文件名
     request["file_format"] = file_format;   // 文件拓展名
     request["file_size"] = file_size;  // 总大小
@@ -51,10 +50,9 @@ void UserUploadsManager::sendInitialUploadRequest(const QString& file_path)
     request["client_id"] = client_id;    // 客户端ID
     request["file_path"] = file_path;   // 文件路径，通过服务器间接传递给具体执行上传的函数
 
-    QJsonDocument json_doc(request);
-    QByteArray json_data = json_doc.toJson();
-
-    network->sendMessage(json_data); // 发送数据给服务器
+    // 使用数据头和json数据包，打包进自定义数据包
+    Packet message(PacketType::INITIAL_UPLOAD, request);
+    network->sendMessage(message.toByteArray());  // 序列化后，由通信管理发送给服务端
 }
 
 // 文件切片上传
@@ -68,7 +66,6 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
     QByteArray file_data;    // 文件数据
 
     QJsonObject request;    // 上传的数据
-    request["type"] = "UPLOAD_CHUNK";
     request["file_id"] = file_id; // 文件id
 
     if (!file.open(QIODevice::ReadOnly))

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QUuid>
 #include <QFile>
+#include "../feature/data/packet.h" // 自定义数据包
 
 ClientNetwork::ClientNetwork(QObject *parent)
     : QObject(parent),
@@ -44,13 +45,14 @@ void ClientNetwork::onConnected()
 {
     qDebug() << "成功连接到服务器";
 
+    // 添加json 子数据包
     QJsonObject request;
-    request["type"] = "CONNECT";
     request["client_id"] = client_id;   // 传递客户端id，记录客户端链接日志
+
+    Packet packet(PacketType::LOGIN, request);  // 添加数据头，打包数据
+
     // 序列化数据，发给服务端
-    QJsonDocument messageDoc(request);
-    QByteArray message = messageDoc.toJson();
-    sendMessage(message);
+    sendMessage(packet.toByteArray());
 }
 
 // 链接服务器失败
@@ -93,20 +95,18 @@ void ClientNetwork::readData()
     qDebug("客户端收到消息");
     // 获取发回的数据
     // 然后检查结果类型，然后发送对应信号
-    QByteArray data = tcpSocket->readAll();
-    QJsonDocument requestDoc = QJsonDocument::fromJson(data);
-    QJsonObject request = requestDoc.object();
 
-    QString type = request["type"].toString();  // 获取返回类型
+    QByteArray data = tcpSocket->readAll();
+    Packet request = Packet::fromByteArray(data);    // 反序列化数据包
 
     // 根据服务器返回结果，发射对应信号，通知对象
-    if (type == "LOGIN")    // 登录结果
+    if (request.getType() == PacketType::LOGIN)    // 登录结果
     {
-        emit loginResponse(request);
+        emit loginResponse(request.getJsonData());
     }
-    else if (type == "INITIAL_UPLOAD") // 文件上传任务初始化结果
+    else if (request.getType() == PacketType::INITIAL_UPLOAD) // 文件上传任务初始化结果
     {
-        emit uploadsInitResponse(request);
+        emit uploadsInitResponse(request.getJsonData());
     }
 }
 
