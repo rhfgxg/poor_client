@@ -10,8 +10,11 @@ MainWindow::MainWindow(ClientNetwork *network_, QWidget *parent):
 {
     layout();
 
+    // 工具集
     connect(pushButton_to_tools, &QPushButton::clicked, this, &MainWindow::on_pushButton_to_tools_clicked);
+    // 终端
     connect(pushButton_terminal, &QPushButton::clicked, this, &MainWindow::on_pushButton_terminal_clicked);
+    // 文件上传
     connect(pushButton_uploads, &QPushButton::clicked, this, &MainWindow::on_pushButton_uploads_clicked);
 
 }
@@ -42,7 +45,7 @@ void MainWindow::on_pushButton_terminal_clicked()
     w->show();
 }
 
-// 打开图片上传界面
+// 打开文件上传界面
 void MainWindow::on_pushButton_uploads_clicked()
 {
     this->close();

@@ -37,7 +37,7 @@ void openClient(ClientNetwork *network)
 //    }
 //    else
     {
-        // 进入软件
+        // 自动登录
         MainWindow *w = new MainWindow(network);
         w->show();
     }

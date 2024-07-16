@@ -14,7 +14,7 @@ UserManager::UserManager(ClientNetwork *network_, QObject *parent) :
 
 UserManager::~UserManager()
 {
-    delete network;
+
 }
 
 // 账号注册调用此函数

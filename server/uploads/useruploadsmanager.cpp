@@ -62,11 +62,13 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
   * 传入偏移量时，表示已发送部分文件（断点续传功能）从偏移量区域开始切片并传输
   */
     QFile file(file_path);  // 文件路径
-    const qint64 chunk_size = 1024 * 30; // 每个切片30kb：经过测试，在目前，30kb可以保持一个稳定的传输质量，切片传输时不会出现json解析异常
+    const qint64 chunk_size = 1024 * 1024; // 每个切片1MB
     QByteArray file_data;    // 文件数据
 
-    QJsonObject request;    // 上传的数据
-    request["file_id"] = file_id; // 文件id
+    Packet request;  // 上传的数据
+    request.setType(PacketType::UPLOAD_CHUNK);   // 设置数据头
+    QJsonObject request_json;    // 上传的子数据包
+    request_json["file_id"] = file_id; // 文件id
 
     if (!file.open(QIODevice::ReadOnly))
     {
@@ -81,20 +83,18 @@ void UserUploadsManager::uploadFileInChunks(const QString file_id, const QString
         return;
     }
     while (!file.atEnd())   // 循环直到文件末尾，每次发送一个文件块
-    {
-        // todo：防止上传时源文件被修改
-        file_data = file.read(chunk_size);    // 每次读取一片的大小，保存在fileData
-        QString base64_data = file_data.toBase64();  // 转 base64编码
+    {// todo：防止上传时源文件被修改
+        file_data = file.read(chunk_size);  // 每次读取一片的大小
+        request.setFileData(file_data); // 将文件块加入数据包
 
-        request["file_data"] = base64_data;   // 切片后文件块
-        request["offset"] = offset; // 已发送文件大小
+        request_json["offset"] = offset; // 文件偏移地址（文件块下标）
+        request.setJsonData(request_json);  // 添加json子数据包
 
         // 序列化数据，发送数据给服务器
-        QJsonDocument json_doc(request);
-        QByteArray json_data = json_doc.toJson();
-        network->sendMessage(json_data);
+        network->sendMessage(request.toByteArray());
 
-        offset += file_data.size();   // 更新已发送的字节数 bytesSent，加上当前读取的数据块大小。
+        // 更新文件偏移地址（文件块下标）offset，加上当前读取的数据块大小。
+        offset += file_data.size();
     }
     file.close();
 }
@@ -108,8 +108,6 @@ void UserUploadsManager::onReadyRead(const QJsonObject &request)
     {
         QString file_id  = request["file_id"].toString();    // 文件ID
         QString file_path = request["file_path"].toString();// 文件路径
-
-        qDebug() << "初始上传请求成功";
 
         uploadFileInChunks(file_id, file_path);   // 初始化成功：开始执行上传任务
 
