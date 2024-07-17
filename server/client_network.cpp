@@ -84,7 +84,7 @@ void ClientNetwork::sendMessage(const QByteArray &message)
     }
     else
     {
-//        qDebug() << "成功写入" << bytesWritten << "字节数据";
+//        qDebug() << "成功发送" << bytesWritten << "字节数据";
 //        tcpSocket->flush(); // 确保数据立即发送，立刻清空缓冲区，发送数据
     }
 }
