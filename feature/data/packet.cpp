@@ -32,10 +32,10 @@ QByteArray Packet::toByteArray() const
     QDataStream data_stream(&byte_array, QIODevice::WriteOnly);   // 用来序列化数据
 
     // 序列化json子包
-    QByteArray jsonDataBytes = QJsonDocument(json_data).toJson(QJsonDocument::Compact);
+    QByteArray json_data_bytes = QJsonDocument(json_data).toJson(QJsonDocument::Compact);
 
     // 计算数据包大小：数据包size，数据包类型size，json数据包size，文件数据size
-    quint32 packetSize = sizeof(quint32) + sizeof(quint32) + jsonDataBytes.size() + file_data.size();
+    quint32 packet_size = sizeof(quint32) + sizeof(quint32) + (sizeof(quint32) + json_data_bytes.size()) + (sizeof(quint32)+file_data.size());
     /* 原计算方式
      * quint32 packetSize = sizeof(quint32) + sizeof(quint32) + (jsonDataBytes.size() + sizeof(quint32)) + (fileData.size() + sizeof(quint32));
      * 由于在写入数据流的时候，
@@ -43,41 +43,14 @@ QByteArray Packet::toByteArray() const
      * 所以这里，添加对应大小来使大小相同
      */
 
-    /* 防止 QDataStream 在序列化时插入额外字符
-     * QDataStream在序列化时，会在数据前插入额外的4字节用来保存下一段数据的长度
-     * 例如原数据长度为 0，json数据长度为30
-     * 在序列化后，数据包长度= 34 = 4(保存长度) + 30(实际数据)
-     * 使用 QDataStream的 writeRawData(char*, int len) 进行序列化可以避免插入额外字符
-     * 用法：QDataStream().writeRawData(实际数据转char*, 实际数据的长度)
-     *
-     * QByteArray转char*：QByteArray.constData()
-     *
-     * quint32转char*：先转QString，再转QByteArray，然后转char*
-     * QString::number(packetSize)：转QString
-     * QString.toUtf8()：转QByteArray
-     * QByteArray.constData()转char*
-     */
-
     // 写入数据包大小
-    data_stream.writeRawData(QString::number(packetSize).toUtf8().constData(), sizeof(packetSize));
+    data_stream.writeRawData(reinterpret_cast<const char*>(&packet_size), sizeof(packet_size));
     // 写入数据包类型
-    data_stream.writeRawData(QString::number(static_cast<quint32>(type)).toUtf8().constData(), sizeof(static_cast<quint32>(type)));
+    data_stream.writeRawData(reinterpret_cast<const char*>(&type), sizeof(static_cast<quint32>(type)));
     // 写入 JSON 数据
-    data_stream.writeRawData(jsonDataBytes.constData(), jsonDataBytes.size());
+    data_stream << json_data_bytes;
     // 写入文件切片数据
-    data_stream.writeRawData(file_data.constData(), file_data.size());
-
-    {
-        QDataStream stream(&byte_array, QIODevice::ReadOnly);
-
-        quint32 packet_size; // 数据包大小
-
-        // 读取数据包大小
-        stream >> packet_size;
-
-        qDebug() << "发送数据" << byte_array;
-        qDebug() << packet_size;
-    }
+    data_stream << file_data;
 
     return byte_array;
 }
@@ -93,24 +66,13 @@ Packet Packet::fromByteArray(const QByteArray &byte_array)
     QByteArray file_data;// 文件切片数据子包
 
     // 读取数据包大小
-    stream >> packet_size;
+    stream.readRawData(reinterpret_cast<char*>(&packet_size), sizeof(packet_size));
     // 读取数据包类型
-    stream >> type_int;
+    stream.readRawData(reinterpret_cast<char*>(&type_int), sizeof(type_int));
     // 读取 JSON 数据大小和数据
-    quint32 json_data_size;
-    {
-        stream >> json_data_size;   // 读取 JSON 数据的大小：在序列化时额外插入了4字节的长度信息
-        json_data.resize(json_data_size);   // 调整json_data 的长度，确保 json_data 有足够的空间来存储即将从数据流中读取的数据。
-        stream.readRawData(json_data.data(), json_data_size);   // 从 stream 中读取 json_data_size 字节的数据，并将其存储在 json_data 中
-        /* json_data.data() 返回一个指向 json_data 内部数据的指针，readRawData 方法会将读取的数据直接写入这个指针所指向的内存区域 */
-    }
+    stream >> json_data;
     // 读取文件切片数据大小和数据
-    quint32 file_data_size;
-    {
-        stream >> file_data_size;
-        file_data.resize(file_data_size);
-        stream.readRawData(file_data.data(), file_data_size);
-    }
+    stream >> file_data;
 
     PacketType type = static_cast<PacketType>(type_int); // 枚举值 转 文件类型枚举
     QJsonObject json_object = QJsonDocument::fromJson(json_data).object();    // 解析json子包

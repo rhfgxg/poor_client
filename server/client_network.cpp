@@ -15,7 +15,6 @@ ClientNetwork::ClientNetwork(QObject *parent)
 
     // QTcpSocket::readyRead 服务器发送了数据，数据被成功接收并存储在QTcpSocket的内部缓冲区中，Qt就会发出这个信号
     connect(tcpSocket, &QTcpSocket::readyRead, this, &ClientNetwork::readData);
-
 }
 
 ClientNetwork::~ClientNetwork()
@@ -49,7 +48,7 @@ void ClientNetwork::onConnected()
     QJsonObject request;
     request["client_id"] = client_id;   // 传递客户端id，记录客户端链接日志
 
-    Packet packet(PacketType::LOGIN, request);  // 添加数据头，打包数据
+    Packet packet(PacketType::CLIENT_CONNECT, request);  // 添加数据头，打包数据
 
     // 序列化数据，发给服务端
     sendMessage(packet.toByteArray());
