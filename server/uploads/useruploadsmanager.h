@@ -20,7 +20,7 @@ public:
 
     // 参数：文件路径，偏移量（已发送文件大小，当偏移量为0，表示文件第一次发送）
     // 传入偏移量时，表示已发送部分文件（断点续传功能）从偏移量区域开始切片并传输
-    void uploadFileInChunks(const QString file_id, const QString& file_path, qint64 offset = 0);
+    void uploadFileInChunks(const QString file_id, const QString& file_path, QVector<bool> missing_parts);
 
 private slots:
     void onReadyRead(const QJsonObject &request); // 处理返回信息，调用 uploadFileInChunks函数 返回信息：第一次上传时返回文件ID

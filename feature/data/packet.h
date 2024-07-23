@@ -14,6 +14,7 @@ enum PacketType // 数据头类型
     RESISTER,   // 注册
     INITIAL_UPLOAD, // 初始化文件切片上传任务
     UPLOAD_CHUNK, // 文件切片上传
+    UPLOAD_COMPLETE,    // 请求检查文件上传状态：上传完成或返回缺失列表
     OTHER   // 其他数据
 };
 
