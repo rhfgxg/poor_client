@@ -23,7 +23,8 @@ public:
     void uploadFileInChunks(const QString file_id, const QString& file_path, QVector<bool> missing_parts);
 
 private slots:
-    void onReadyRead(const QJsonObject &request); // 处理返回信息，调用 uploadFileInChunks函数 返回信息：第一次上传时返回文件ID
+    void onReadyReadUploadsInit(const QJsonObject &request); // 处理返回信息，调用 uploadFileInChunks函数 返回信息：第一次上传时返回文件ID
+    void onReadyReadUploadsComplete(const QJsonObject &request);    // 处理文件上传结果(是否完整上传)
 
 private:
     ClientNetwork *network;    // 服务器通信套接字，用于接受信号

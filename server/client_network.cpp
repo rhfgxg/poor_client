@@ -1,10 +1,5 @@
 #include "client_network.h"
-#include <QDataStream>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QDebug>
-#include <QUuid>
-#include <QFile>
+#include <QFile>    // 客户端信息配置文件
 #include "../feature/data/packet.h" // 自定义数据包
 
 ClientNetwork::ClientNetwork(QObject *parent)
@@ -69,43 +64,54 @@ void ClientNetwork::sendMessage(const QByteArray &message)
         return;
     }
 
-    // 写入数据到套接字, 然后发送
-    qint64 bytesWritten = tcpSocket->write(message);
+    qint64 bytesWritten = tcpSocket->write(message);    // 写入数据到套接字, 然后发送
+
+    if(bytesWritten <= 0)
+    {// 检查是否有数据实际被写入和发送
+        qDebug() << "写入数据失败：" << tcpSocket->errorString();
+    }
+//    qDebug() << "成功发送" << message;
+
     /* write和flush区别
      * write 将数据写入到内部缓冲区。依赖于 Qt 框架的自动缓冲和发送机制，异步操作
      * flush 强制将内部缓冲区中的数据发送，同步操作，会阻塞线程，直到数据发送完毕
+     * tcpSocket->flush(); // 确保数据立即发送，立刻清空缓冲区，发送数据
      */
-
-    // 检查是否有数据实际被写入
-    if(bytesWritten <= 0)
-    {
-        qDebug() << "写入数据失败：" << tcpSocket->errorString();
-    }
-    else
-    {
-//        qDebug() << "成功发送" << bytesWritten << "字节数据";
-//        tcpSocket->flush(); // 确保数据立即发送，立刻清空缓冲区，发送数据
-    }
 }
 
 // 读取服务器响应数据
 void ClientNetwork::readData()
 {
-    qDebug("客户端收到消息");
     // 获取发回的数据
     // 然后检查结果类型，然后发送对应信号
 
     QByteArray data = tcpSocket->readAll();
     Packet request = Packet::fromByteArray(data);    // 反序列化数据包
 
-    // 根据服务器返回结果，发射对应信号，通知对象
-    if (request.getType() == PacketType::LOGIN)    // 登录结果
+    switch (request.getType())      // 根据服务器返回数据包类型，发射对应信号，通知对象
+    {
+    case PacketType::LOGIN: // 登录结果
     {
         emit loginResponse(request.getJsonData());
+        break;  // 退出分支
     }
-    else if (request.getType() == PacketType::INITIAL_UPLOAD) // 文件上传任务初始化结果
+    case PacketType::INITIAL_UPLOAD:    // 文件上传任务初始化结果：文件是否准备好上传
     {
         emit uploadsInitResponse(request.getJsonData());
+        break;  // 退出分支
+    }
+    case PacketType::UPLOAD_COMPLETE:    // 文件上传结果：文件是否完整上传
+    {
+        emit uploadsCompleteResponse(request.getJsonData());
+        break;  // 退出分支
+    }
+    default:    // 意外返回数据
+    {
+        qDebug() << "通信管理：服务端返回了意料之外的数据类型：" << request.getType();
+        qDebug() << "通信管理：服务端返回了意料之外的数据：" << data;
+        break;  // 退出分支
+    }
+
     }
 }
 
